@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { Icon } from '@iconify/vue'
 import ui from '@nuxt/ui/vue-plugin'
 
 import App from './App.vue'
@@ -11,5 +12,6 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(ui)
+app.component('Icon', Icon)
 
 app.mount('#app')
