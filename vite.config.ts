@@ -1,16 +1,18 @@
 import { fileURLToPath, URL } from 'node:url'
-
+import ui from '@nuxt/ui/vite'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import vueLayouts from 'vite-plugin-vue-layouts-next'
 import vueRouter from 'vue-router/vite'
+import appConfig from './app.config'
 
 const featuresDir = fileURLToPath(new URL('./src/features', import.meta.url))
 
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
+    ui(appConfig),
     vueRouter({
       dts: 'src/route-map.d.ts',
       routesFolder: [
