@@ -3,17 +3,7 @@ import type { NuxtUIOptions } from '@nuxt/ui/vite'
 export default <NuxtUIOptions>{
   colorMode: false,
   theme: {
-    colors: [
-      'primary',
-      'zinc',
-      'red',
-      'yellow',
-      'green',
-      'success',
-      'error',
-      'white',
-      'orange',
-    ],
+    colors: ['primary', 'zinc', 'red', 'yellow', 'green', 'success', 'error', 'white', 'orange'],
   },
   autoImport: {
     imports: [
@@ -54,7 +44,19 @@ export default <NuxtUIOptions>{
       },
       variants: { variant: { solid: { base: 'disabled:opacity-40' } } },
       compoundVariants: [
-        ...(['primary', 'zinc', 'red', 'yellow', 'green', 'success', 'error', 'white', 'neutral'] as const).map(color => ({
+        ...(
+          [
+            'primary',
+            'zinc',
+            'red',
+            'yellow',
+            'green',
+            'success',
+            'error',
+            'white',
+            'neutral',
+          ] as const
+        ).map((color) => ({
           color,
           variant: 'soft' as const,
           class: 'bg-[#242424]',
@@ -101,7 +103,7 @@ export default <NuxtUIOptions>{
     },
     dropdownMenu: {
       slots: {
-        content: 'bg-[#0D0D0F] text-white ring-0 rounded-xl shadow-xl p-1.5',
+        content: 'z-[100] bg-[#0D0D0F] text-white ring-0 rounded-xl shadow-xl p-1.5',
         viewport: 'relative divide-y divide-default scroll-py-1 overflow-y-auto flex-1',
         arrow: 'fill-default',
         group: 'p-1 isolate',
@@ -123,7 +125,8 @@ export default <NuxtUIOptions>{
     },
     editorMentionMenu: {
       slots: {
-        content: 'min-w-64 max-w-96 max-h-96 bg-[#1E1E1E] border border-[#303030] rounded-xl shadow-2xl ring-0 overflow-hidden',
+        content:
+          'min-w-64 max-w-96 max-h-96 bg-[#1E1E1E] border border-[#303030] rounded-xl shadow-2xl ring-0 overflow-hidden',
         viewport: 'relative divide-y divide-[#2A2A2A] scroll-py-1 overflow-y-auto flex-1',
         group: 'p-1.5 isolate',
         label: 'w-full flex items-center font-semibold text-[#D1D5DB]',
@@ -163,7 +166,8 @@ export default <NuxtUIOptions>{
         base: 'min-w-full',
         caption: 'sr-only',
         thead: 'bg-[#191919] border-t border-[#2A2A2A]',
-        tbody: 'isolate [&>tr]:data-[selectable=true]:hover:bg-elevated/50 [&>tr]:data-[selectable=true]:focus-visible:outline-primary',
+        tbody:
+          'isolate [&>tr]:data-[selectable=true]:hover:bg-elevated/50 [&>tr]:data-[selectable=true]:focus-visible:outline-primary',
         tfoot: 'relative',
         tr: 'hover:bg-white/[0.03] transition-colors data-[expanded=true]:bg-white/[0.02]',
         th: 'text-xs font-medium text-white/40 py-3',
@@ -195,10 +199,10 @@ export default <NuxtUIOptions>{
         },
         loading: { true: { thead: 'after:absolute after:z-1 after:h-px' } },
         loadingAnimation: {
-          'carousel': '',
+          carousel: '',
           'carousel-inverse': '',
-          'swing': '',
-          'elastic': '',
+          swing: '',
+          elastic: '',
         },
         loadingColor: {
           primary: '',
@@ -224,12 +228,18 @@ export default <NuxtUIOptions>{
         {
           loading: true,
           loadingAnimation: 'carousel',
-          class: { thead: 'after:animate-[carousel_2s_ease-in-out_infinite] rtl:after:animate-[carousel-rtl_2s_ease-in-out_infinite]' },
+          class: {
+            thead:
+              'after:animate-[carousel_2s_ease-in-out_infinite] rtl:after:animate-[carousel-rtl_2s_ease-in-out_infinite]',
+          },
         },
         {
           loading: true,
           loadingAnimation: 'carousel-inverse',
-          class: { thead: 'after:animate-[carousel-inverse_2s_ease-in-out_infinite] rtl:after:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]' },
+          class: {
+            thead:
+              'after:animate-[carousel-inverse_2s_ease-in-out_infinite] rtl:after:animate-[carousel-inverse-rtl_2s_ease-in-out_infinite]',
+          },
         },
         {
           loading: true,
@@ -248,8 +258,7 @@ export default <NuxtUIOptions>{
       },
     },
     tooltip: {
-      slots:
-       { content: 'bg-gray-neutral-900 rounded-lg p-2' },
+      slots: { content: 'bg-gray-neutral-900 rounded-lg p-2' },
       arrow: 'fill-primary',
     },
   },
