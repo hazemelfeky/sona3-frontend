@@ -6,11 +6,11 @@
  *   src/features/<feature-name>/
  *     ├── components/
  *     ├── pages/
+ *     │   └── index.vue
  *     ├── composables/
  *     ├── store/
  *     ├── api/
- *     ├── types.ts
- *     └── index.vue
+ *     └── types.ts
  *
  */
 
@@ -35,11 +35,27 @@ dirs.forEach((dir) => {
 })
 
 // create files
-const files = ['index.vue', 'types.ts']
-files.forEach((file) => {
+const indexVueContent = `<script setup lang="ts">
+</script>
+
+<template>
+  <div>
+    <h2>${feature}</h2>
+  </div>
+</template>
+
+<style scoped>
+</style>
+`
+
+const files = {
+  'pages/index.vue': indexVueContent,
+  'types.ts': '',
+}
+Object.entries(files).forEach(([file, content]) => {
   const filePath = path.join(root, file)
   if (!fs.existsSync(filePath)) {
-    fs.writeFileSync(filePath, '')
+    fs.writeFileSync(filePath, content)
     console.log(`📄  Created ${path.relative(process.cwd(), filePath)}`)
   }
 })
