@@ -2,16 +2,16 @@
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 import { useDark } from '@vueuse/core'
 
-const open = ref(true)
+const open = ref(false)
 
 const isDark = useDark()
 
 const teams = ref([
   {
-    label: 'Nuxt',
+    label: 'Sona3',
     avatar: {
-      src: 'https://github.com/nuxt.png',
-      alt: 'Nuxt',
+      src: '/logo.svg',
+      alt: 'Sona3',
     },
   },
   {
@@ -179,23 +179,24 @@ defineShortcuts(extractShortcuts(teamsItems.value))
       }"
     >
       <template #header>
-        <UDropdownMenu
-          :items="teamsItems"
-          :content="{ align: 'start', collisionPadding: 12 }"
-          :ui="{ content: 'w-(--reka-dropdown-menu-trigger-width) min-w-48' }"
+        <UButton
+          label="Sona3"
+          variant="ghost"
+          class="w-full justify-start overflow-hidden rounded-md bg-transparent shadow-none hover:bg-transparent"
+          :ui="{
+            trailingIcon: 'text-dimmed ms-auto',
+          }"
+          @click="open = !open"
         >
-          <UButton
-            v-bind="selectedTeam"
-            trailing-icon="i-lucide-chevrons-up-down"
-            color="neutral"
-            variant="ghost"
-            square
-            class="w-full data-[state=open]:bg-elevated overflow-hidden"
-            :ui="{
-              trailingIcon: 'text-dimmed ms-auto',
-            }"
-          />
-        </UDropdownMenu>
+          <template #leading>
+            <img
+              src="/logo.svg"
+              alt="Sona3"
+              class="shrink-0 object-contain dark:brightness-0 dark:invert"
+              style="width: 1.3rem; height: 1.3rem; min-width: 1.3rem; min-height: 1.3rem;"
+            />
+          </template>
+        </UButton>
       </template>
 
       <template #default="{ state }">
@@ -231,13 +232,13 @@ defineShortcuts(extractShortcuts(teamsItems.value))
 
     <div class="flex-1 flex flex-col">
       <div class="h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
-        <UButton
+        <!-- <UButton
           icon="i-lucide-panel-left"
           color="neutral"
           variant="ghost"
           aria-label="Toggle sidebar"
           @click="open = !open"
-        />
+        /> -->
       </div>
 
       <div class="flex-1 p-4">
