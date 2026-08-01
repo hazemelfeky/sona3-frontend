@@ -1,6 +1,6 @@
-# hr-system
+# Sona3 system
 
-This template should help get you started developing with Vue 3 in Vite.
+Here is how will make managing Sona3 like an arcade game.
 
 ## Recommended IDE Setup
 
