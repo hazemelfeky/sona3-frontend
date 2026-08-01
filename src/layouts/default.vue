@@ -171,6 +171,7 @@ defineShortcuts(extractShortcuts(teamsItems.value))
     <USidebar
       v-model:open="open"
       collapsible="icon"
+      side="right"
       rail
       :ui="{
         container: 'h-full',
@@ -231,14 +232,22 @@ defineShortcuts(extractShortcuts(teamsItems.value))
     </USidebar>
 
     <div class="flex-1 flex flex-col">
-      <div class="h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
-        <!-- <UButton
-          icon="i-lucide-panel-left"
-          color="neutral"
+      <div class="lg:hidden h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
+        <UButton
+          label="Sona3"
           variant="ghost"
-          aria-label="Toggle sidebar"
+          class="justify-start overflow-hidden rounded-md bg-transparent shadow-none hover:bg-transparent"
           @click="open = !open"
-        /> -->
+        >
+          <template #leading>
+            <img
+              src="/logo.svg"
+              alt="Sona3"
+              class="shrink-0 object-contain dark:brightness-0 dark:invert"
+              style="width: 1.3rem; height: 1.3rem; min-width: 1.3rem; min-height: 1.3rem;"
+            />
+          </template>
+        </UButton>
       </div>
 
       <div class="flex-1 p-4">

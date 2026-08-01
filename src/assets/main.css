@@ -1,2 +1,123 @@
 @import "tailwindcss";
 @import "@nuxt/ui";
+
+@theme {
+  /* navy (base #12395F) */
+  --color-navy-50: #EFF3F8;
+  --color-navy-100: #D4E3F2;
+  --color-navy-200: #9BC4EC;
+  --color-navy-300: #5199DE;
+  --color-navy-400: #2169AF;
+  --color-navy-500: #12395F;
+  --color-navy-600: #0D3052;
+  --color-navy-700: #0A2743;
+  --color-navy-800: #081F35;
+  --color-navy-900: #061829;
+  --color-navy-950: #04101B;
+
+  /* purple (base #6B4FA0) */
+  --color-purple-50: #F6F5F8;
+  --color-purple-100: #EBE9EF;
+  --color-purple-200: #D3CDE0;
+  --color-purple-300: #B1A1D0;
+  --color-purple-400: #8D75BB;
+  --color-purple-500: #6B4FA0;
+  --color-purple-600: #5A4286;
+  --color-purple-700: #49366D;
+  --color-purple-800: #3A2B56;
+  --color-purple-900: #2C1F46;
+  --color-purple-950: #1D142E;
+
+  /* amber (base #C97B3D) */
+  --color-amber-50: #FAF7F5;
+  --color-amber-100: #F3EDE9;
+  --color-amber-200: #E9D8CA;
+  --color-amber-300: #E3BA9A;
+  --color-amber-400: #D69B6C;
+  --color-amber-500: #C97B3D;
+  --color-amber-600: #AC6730;
+  --color-amber-700: #8B5327;
+  --color-amber-800: #6F421F;
+  --color-amber-900: #563318;
+  --color-amber-950: #3B220E;
+
+  /* blue (base #3B6FA0) */
+  --color-blue-50: #F4F6F8;
+  --color-blue-100: #E6EBEF;
+  --color-blue-200: #C5D4E1;
+  --color-blue-300: #90B4D6;
+  --color-blue-400: #5D92C3;
+  --color-blue-500: #3B6FA0;
+  --color-blue-600: #325D86;
+  --color-blue-700: #284B6D;
+  --color-blue-800: #203C56;
+  --color-blue-900: #162F45;
+  --color-blue-950: #0F1F2E;
+
+  /* gray (base #8A8578) */
+  --color-gray-50: #F8F8F7;
+  --color-gray-100: #EEEEED;
+  --color-gray-200: #DBDAD7;
+  --color-gray-300: #C2C0B9;
+  --color-gray-400: #A6A298;
+  --color-gray-500: #8A8578;
+  --color-gray-600: #747065;
+  --color-gray-700: #5E5B51;
+  --color-gray-800: #4B4841;
+  --color-gray-900: #3A3832;
+  --color-gray-950: #292620;
+}
+
+:root, .light {
+  --paper: #F7F3EC;
+  --ink: #20261F;
+  --ink-soft: #5B6158;
+  --border-color: #DED4C2;
+  --card: #FFFFFF;
+  --shadow: 0 1px 2px rgba(32, 38, 31, 0.06), 0 4px 14px rgba(32, 38, 31, 0.05);
+
+  --ui-bg: var(--paper);
+  --ui-bg-muted: #EFEDE7;
+  --ui-bg-elevated: var(--card);
+  --ui-bg-accented: #E4E1D8;
+  --ui-bg-inverted: var(--ink);
+  --ui-text: var(--ink);
+  --ui-text-toned: var(--ink);
+  --ui-text-muted: var(--ink-soft);
+  --ui-text-dimmed: var(--ink-soft);
+  --ui-text-highlighted: var(--ink);
+  --ui-text-inverted: var(--paper);
+  --ui-border: var(--border-color);
+  --ui-border-muted: var(--border-color);
+  --ui-border-accented: #C9BEA5;
+  --ui-border-inverted: var(--ink);
+}
+
+.dark {
+  --paper: #1B1F19;
+  --ink: #F2EEE4;
+  --ink-soft: #A7AC9E;
+  --border-color: #383F35;
+  --card: #242A21;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 14px rgba(0, 0, 0, 0.35);
+
+  --ui-bg: var(--paper);
+  --ui-bg-muted: #20251E;
+  --ui-bg-elevated: var(--card);
+  --ui-bg-accented: #2C3228;
+  --ui-bg-inverted: var(--ink);
+  --ui-text: var(--ink);
+  --ui-text-toned: var(--ink);
+  --ui-text-muted: var(--ink-soft);
+  --ui-text-dimmed: var(--ink-soft);
+  --ui-text-highlighted: var(--ink);
+  --ui-text-inverted: var(--paper);
+  --ui-border: var(--border-color);
+  --ui-border-muted: var(--border-color);
+  --ui-border-accented: #454C40;
+  --ui-border-inverted: var(--ink);
+}
+
+body {
+  background-color: var(--ui-bg);
+}

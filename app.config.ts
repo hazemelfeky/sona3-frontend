@@ -3,7 +3,7 @@ import type { NuxtUIOptions } from '@nuxt/ui/vite'
 export default <NuxtUIOptions>{
   colorMode: false,
   theme: {
-    colors: ['primary', 'zinc', 'red', 'yellow', 'green', 'success', 'error', 'white', 'orange'],
+    colors: ['navy', 'purple', 'amber', 'blue', 'gray', 'red', 'green'],
   },
   autoImport: {
     imports: [
@@ -20,21 +20,21 @@ export default <NuxtUIOptions>{
     vueTemplate: true,
   },
   colors: {
-    primary: 'primary',
-    neutral: 'zinc',
+    primary: 'navy',
+    secondary: 'purple',
+    warning: 'amber',
+    info: 'blue',
+    success: 'green',
     error: 'red',
-    warning: 'yellow',
-    white: 'white',
-    yellow: 'yellow',
-    orange: 'orange',
+    neutral: 'gray',
   },
   ui: {
     select: {
       slots: {
-        root: 'bg-[#191919] rounded-xl py-2',
-        input: 'text-white ',
-        base: 'placeholder:text-[#B3B3B3] ',
-        content: 'bg-[#242424] rounded-lg ring-0 text-white ',
+        root: 'bg-elevated rounded-xl py-2',
+        input: 'text-highlighted',
+        base: 'placeholder:text-dimmed',
+        content: 'bg-elevated rounded-lg ring-1 ring-default text-highlighted',
       },
     },
     button: {
@@ -44,38 +44,20 @@ export default <NuxtUIOptions>{
       },
       variants: { variant: { solid: { base: 'disabled:opacity-40' } } },
       compoundVariants: [
-        ...(
-          [
-            'primary',
-            'zinc',
-            'red',
-            'yellow',
-            'green',
-            'success',
-            'error',
-            'white',
-            'neutral',
-          ] as const
-        ).map((color) => ({
-          color,
-          variant: 'soft' as const,
-          class: 'bg-[#242424]',
-        })),
         {
           color: 'primary' as const,
           variant: 'solid' as const,
           class: {
             root: 'hover:opacity-100',
-            base: 'bg-[#2159D3] hover:bg-[#2159D3]/80',
           },
         },
       ],
     },
     input: {
       slots: {
-        root: 'bg-[#141416] rounded-xl py-1',
-        input: 'text-white',
-        base: 'placeholder:text-[#6B6B6B] ring-0 border border-[#141416]',
+        root: 'bg-elevated rounded-xl py-1',
+        input: 'text-highlighted',
+        base: 'placeholder:text-dimmed ring-0 border border-default',
       },
       defaultVariants: { variant: 'none' },
       variants: {
@@ -103,7 +85,7 @@ export default <NuxtUIOptions>{
     },
     dropdownMenu: {
       slots: {
-        content: 'z-[100] bg-[#0D0D0F] text-white ring-0 rounded-xl shadow-xl p-1.5',
+        content: 'z-[100] bg-elevated text-highlighted ring-1 ring-default rounded-xl shadow-xl p-1.5',
         viewport: 'relative divide-y divide-default scroll-py-1 overflow-y-auto flex-1',
         arrow: 'fill-default',
         group: 'p-1 isolate',
@@ -126,34 +108,34 @@ export default <NuxtUIOptions>{
     editorMentionMenu: {
       slots: {
         content:
-          'min-w-64 max-w-96 max-h-96 bg-[#1E1E1E] border border-[#303030] rounded-xl shadow-2xl ring-0 overflow-hidden',
-        viewport: 'relative divide-y divide-[#2A2A2A] scroll-py-1 overflow-y-auto flex-1',
+          'min-w-64 max-w-96 max-h-96 bg-elevated border border-default rounded-xl shadow-2xl ring-0 overflow-hidden',
+        viewport: 'relative divide-y divide-default scroll-py-1 overflow-y-auto flex-1',
         group: 'p-1.5 isolate',
-        label: 'w-full flex items-center font-semibold text-[#D1D5DB]',
-        separator: '-mx-1 my-1 h-px bg-[#2A2A2A]',
+        label: 'w-full flex items-center font-semibold text-toned',
+        separator: '-mx-1 my-1 h-px bg-border',
         item: 'group relative w-full flex items-start select-none outline-none before:absolute before:z-[-1] before:inset-px before:rounded-lg data-disabled:cursor-not-allowed data-disabled:opacity-75',
-        itemLeadingIcon: 'shrink-0 flex items-center justify-center text-[#7A8B91]',
+        itemLeadingIcon: 'shrink-0 flex items-center justify-center text-muted',
         itemLeadingAvatar: 'shrink-0',
         itemLeadingAvatarSize: '',
         itemWrapper: 'flex-1 flex flex-col text-start min-w-0',
-        itemLabel: 'truncate text-sm font-medium text-[#E5E7EB]',
-        itemDescription: 'truncate text-xs text-[#9CA3AF]',
-        itemLabelExternalIcon: 'inline-block size-3 align-top text-[#9CA3AF]',
+        itemLabel: 'truncate text-sm font-medium text-toned',
+        itemDescription: 'truncate text-xs text-muted',
+        itemLabelExternalIcon: 'inline-block size-3 align-top text-dimmed',
       },
       variants: {
         active: {
           true: {
-            item: 'text-white before:bg-[#2A2A2A]',
-            itemLeadingIcon: 'text-[#7DD3FC]',
+            item: 'text-highlighted before:bg-accented',
+            itemLeadingIcon: 'text-primary',
           },
           false: {
             item: [
-              'text-[#E5E7EB] data-highlighted:not-data-disabled:text-white',
-              'data-highlighted:not-data-disabled:before:bg-[#2A2A2A]',
+              'text-toned data-highlighted:not-data-disabled:text-highlighted',
+              'data-highlighted:not-data-disabled:before:bg-accented',
               'transition-colors before:transition-colors',
             ],
             itemLeadingIcon: [
-              'text-[#7A8B91] group-data-highlighted:not-group-data-disabled:text-[#7DD3FC]',
+              'text-muted group-data-highlighted:not-group-data-disabled:text-primary',
               'transition-colors',
             ],
           },
@@ -165,14 +147,14 @@ export default <NuxtUIOptions>{
         root: 'relative overflow-auto',
         base: 'min-w-full',
         caption: 'sr-only',
-        thead: 'bg-[#191919] border-t border-[#2A2A2A]',
+        thead: 'bg-muted border-t border-default',
         tbody:
           'isolate [&>tr]:data-[selectable=true]:hover:bg-elevated/50 [&>tr]:data-[selectable=true]:focus-visible:outline-primary',
         tfoot: 'relative',
-        tr: 'hover:bg-white/[0.03] transition-colors data-[expanded=true]:bg-white/[0.02]',
-        th: 'text-xs font-medium text-white/40 py-3',
+        tr: 'hover:bg-elevated/50 transition-colors data-[expanded=true]:bg-elevated/30',
+        th: 'text-xs font-medium text-muted py-3',
         td: 'py-3',
-        separator: 'border-b border-[#2A2A2A] ',
+        separator: 'border-b border-default',
         empty: 'py-6 text-center text-sm text-muted',
         loading: 'py-6 text-center',
       },
@@ -258,8 +240,16 @@ export default <NuxtUIOptions>{
       },
     },
     tooltip: {
-      slots: { content: 'bg-gray-neutral-900 rounded-lg p-2' },
-      arrow: 'fill-primary',
+      slots: { content: 'bg-inverted text-inverted rounded-lg p-2' },
+      arrow: 'fill-inverted',
+    },
+    sidebar: {
+      compoundVariants: [
+        {
+          side: 'right',
+          class: { root: 'border-s-0 border-e border-default', container: 'border-s-0 border-e border-default' },
+        },
+      ],
     },
   },
 }

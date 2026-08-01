@@ -1,0 +1,19 @@
+- Make it light / dark theme
+- Make it rtl forced as project will be in arabic
+- Use these as main light colors 
+    --paper:#F7F3EC;
+    --ink:#20261F;
+    --ink-soft:#5B6158;
+    --teal:#2F6F62;
+    --teal-soft:#E4EFEC;
+    --amber:#C97B3D;
+    --amber-soft:#F6E9DC;
+    --purple:#6B4FA0;
+    --purple-soft:#ECE6F5;
+    --blue:#3B6FA0;
+    --blue-soft:#E5EDF5;
+    --gray:#8A8578;
+    --gray-soft:#EFEDE7;
+    --border:#DED4C2;
+    --card:#FFFFFF;
+    --shadow: 0 1px 2px rgba(32,38,31,0.06), 0 4px 14px rgba(32,38,31,0.05);
