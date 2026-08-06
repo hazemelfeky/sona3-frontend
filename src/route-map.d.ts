@@ -38,6 +38,20 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '//dashboards/[slug]': RouteRecordInfo<
+      '//dashboards/[slug]',
+      '/dashboards/:slug',
+      { slug: ParamValue<true> },
+      { slug: ParamValue<false> },
+      | never
+    >,
+    '//families/[id]': RouteRecordInfo<
+      '//families/[id]',
+      '/families/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
     '//overview/': RouteRecordInfo<
       '//overview/',
       '/overview',
@@ -65,6 +79,22 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | never
+    }
+    'src/features/dashboards/pages/[slug].vue': {
+      routes:
+        | '//dashboards/[slug]'
+      views:
+        | never
+      pathParamNames:
+        | 'slug'
+    }
+    'src/features/families/pages/[id].vue': {
+      routes:
+        | '//families/[id]'
+      views:
+        | never
+      pathParamNames:
+        | 'id'
     }
     'src/features/overview/pages/index.vue': {
       routes:

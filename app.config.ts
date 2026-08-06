@@ -83,6 +83,11 @@ export default <NuxtUIOptions>{
       },
       defaultVariants: { variant: 'soft' },
     },
+    selectMenu: {
+      slots: {
+        content: 'z-[100]',
+      },
+    },
     dropdownMenu: {
       slots: {
         content: 'z-[100] bg-elevated text-highlighted ring-1 ring-default rounded-xl shadow-xl p-1.5',

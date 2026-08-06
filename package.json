@@ -10,15 +10,18 @@
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
     "format": "prettier --write --experimental-cli src/",
-    "create:feature": "node scripts/create-feature.js"
+    "create:feature": "node scripts/create-feature.js",
+    "gen:types": "supabase gen types typescript --project-id btnqrqyyrnlgvhkamsjp --schema public > src/types/db.ts"
   },
   "dependencies": {
     "@iconify/vue": "^5.0.1",
     "@nuxt/ui": "^4.9.0",
+    "@supabase/supabase-js": "^2.112.0",
     "@vueuse/core": "^14.3.0",
-    "highcharts": "^13.0.0",
+    "echarts": "^6.1.0",
     "pinia": "^3.0.4",
     "vue": "^3.5.38",
+    "vue-echarts": "^8.0.1",
     "vue-router": "^5.1.0"
   },
   "devDependencies": {

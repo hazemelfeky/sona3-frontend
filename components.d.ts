@@ -11,13 +11,29 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
+    ChartBlock: typeof import('./src/components/dashboard/ChartBlock.vue')['default']
+    DashboardView: typeof import('./src/components/dashboard/DashboardView.vue')['default']
+    DataGrid: typeof import('./src/components/dashboard/DataGrid.vue')['default']
+    FamilyDetail: typeof import('./src/components/dashboard/FamilyDetail.vue')['default']
+    FilterBar: typeof import('./src/components/dashboard/FilterBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    StatCards: typeof import('./src/components/dashboard/StatCards.vue')['default']
+    UAlert: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Alert.vue')['default']
     UApp: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
+    UBadge: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Badge.vue')['default']
     UButton: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Button.vue')['default']
+    UCard: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Card.vue')['default']
     UDropdownMenu: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/DropdownMenu.vue')['default']
     UIcon: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/vue/components/Icon.vue')['default']
+    UInput: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Input.vue')['default']
     UNavigationMenu: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/NavigationMenu.vue')['default']
+    UPageGrid: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/PageGrid.vue')['default']
+    UPagination: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Pagination.vue')['default']
+    USelectMenu: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/SelectMenu.vue')['default']
     USidebar: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Sidebar.vue')['default']
+    USkeleton: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue')['default']
+    UTable: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Table.vue')['default']
+    UTooltip: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Tooltip.vue')['default']
   }
 }

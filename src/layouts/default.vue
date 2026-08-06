@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 import { useDark } from '@vueuse/core'
+import { nav } from '@/config/dashboards'
 
 const open = ref(false)
 
@@ -49,44 +50,13 @@ const teamsItems = computed<DropdownMenuItem[][]>(() => {
   ]
 })
 
-function getItems(state: 'collapsed' | 'expanded') {
-  return [
-    {
-      label: 'Inbox',
-      icon: 'i-lucide-inbox',
-      badge: '4',
-    },
-    {
-      label: 'Issues',
-      icon: 'i-lucide-square-dot',
-    },
-    {
-      label: 'Activity',
-      icon: 'i-lucide-square-activity',
-    },
-    {
-      label: 'Settings',
-      icon: 'i-lucide-settings',
-      defaultOpen: true,
-      children:
-        state === 'expanded'
-          ? [
-              {
-                label: 'General',
-                icon: 'i-lucide-house',
-              },
-              {
-                label: 'Team',
-                icon: 'i-lucide-users',
-              },
-              {
-                label: 'Billing',
-                icon: 'i-lucide-credit-card',
-              },
-            ]
-          : [],
-    },
-  ] satisfies NavigationMenuItem[]
+function getItems(_state: 'collapsed' | 'expanded') {
+  return nav.map((entry) => ({
+    label: entry.label,
+    icon: entry.icon,
+    to: entry.slug ? `/dashboards/${entry.slug}` : undefined,
+    disabled: entry.disabled,
+  })) satisfies NavigationMenuItem[]
 }
 
 const user = ref({
