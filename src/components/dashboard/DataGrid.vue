@@ -52,7 +52,7 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
         :loading="loading"
         empty="لا توجد بيانات لعرضها هنا"
         :ui="{ tr: 'cursor-pointer' }"
-        @select="(row: { original: Record<string, unknown> }) => emit('rowClick', row.original)"
+        @select="(_e: Event, row: { original: Record<string, unknown> }) => emit('rowClick', row.original)"
       >
         <template v-for="col in columns" :key="`h-${col.key}`" #[`${col.key}-header`]>
           <button
