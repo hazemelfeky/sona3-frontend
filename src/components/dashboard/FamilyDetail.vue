@@ -51,6 +51,20 @@ const hasNotesData = computed(() =>
   anyDefined(props.family.general_notes, props.family.head_notes, props.family.spouse_notes),
 )
 
+function needStatusColor(value: string | null): 'success' | 'error' | 'warning' {
+  const v = (value ?? '').trim()
+  if (v.includes('مقبول')) return 'success'
+  if (v.includes('مرفوض')) return 'error'
+  return 'warning'
+}
+
+function needStatusIcon(value: string | null): string {
+  const v = (value ?? '').trim()
+  if (v.includes('مقبول')) return 'i-lucide-check-circle'
+  if (v.includes('مرفوض')) return 'i-lucide-x-circle'
+  return 'i-lucide-clock'
+}
+
 const confidenceInfo = computed(() => {
   const v = String(props.family.confidence ?? '').toLowerCase()
   if (v === 'low') return { label: 'ثقة منخفضة', color: 'error' as const, icon: 'i-lucide-alert-triangle' }
@@ -90,25 +104,25 @@ const expenseColumns: TableColumn<Expense>[] = [
         <UBadge v-if="family.evaluation_status" variant="subtle" color="neutral">
           {{ family.evaluation_status }}
         </UBadge>
-        <UTooltip v-if="confidenceInfo" :text="`مستوى الثقة في تصنيف احتياجات هذه الأسرة: ${confidenceInfo.label}`">
+        <!-- <UTooltip v-if="confidenceInfo" :text="`مستوى الثقة في تصنيف احتياجات هذه الأسرة: ${confidenceInfo.label}`">
           <UBadge :color="confidenceInfo.color" variant="subtle" :icon="confidenceInfo.icon">
             {{ confidenceInfo.label }}
           </UBadge>
-        </UTooltip>
+        </UTooltip> -->
       </div>
       <p class="text-dimmed text-sm">
         {{ family.area ?? '—' }} · {{ formatValue(family.member_count, 'number') }} أفراد ·
         {{ formatValue(family.registration_date, 'date') }}
       </p>
       <p v-if="family.source_sheet || family.row_id" class="text-dimmed mt-1 text-xs">
-        المصدر: {{ family.source_sheet ?? '—' }} · صف {{ formatValue(family.row_id, 'number') }}
+        المصدر: {{ family.source_sheet ?? '—' }} · صف {{ family.row_id }}
       </p>
     </div>
 
     <UCard>
       <template #header><h3 class="font-medium">الأسرة</h3></template>
       <div class="grid grid-cols-1 gap-6" :class="hasSpouseData ? 'sm:grid-cols-2' : ''">
-        <dl class="grid grid-cols-2 gap-3 text-sm">
+        <dl class="grid grid-cols-2 gap-3 text-sm py-2 px-4">
           <p class="col-span-2 text-dimmed font-medium">رب الأسرة</p>
           <div>
             <dt class="text-dimmed">العمر</dt>
@@ -132,7 +146,7 @@ const expenseColumns: TableColumn<Expense>[] = [
           </div>
         </dl>
 
-        <dl v-if="hasSpouseData" class="grid grid-cols-2 gap-3 text-sm">
+        <dl v-if="hasSpouseData" class="grid grid-cols-2 gap-3 text-sm py-2 px-4">
           <p class="col-span-2 text-dimmed font-medium">الزوج/الزوجة</p>
           <div>
             <dt class="text-dimmed">الاسم</dt>
@@ -164,7 +178,7 @@ const expenseColumns: TableColumn<Expense>[] = [
 
     <UCard v-if="hasHousingData">
       <template #header><h3 class="font-medium">السكن</h3></template>
-      <dl class="grid grid-cols-2 gap-3 text-sm sm:grid-cols-3">
+      <dl class="grid grid-cols-2 gap-3 text-sm py-2 px-4 sm:grid-cols-3">
         <div>
           <dt class="text-dimmed">نوع السكن</dt>
           <dd>{{ family.housing_type ?? '—' }}</dd>
@@ -203,7 +217,7 @@ const expenseColumns: TableColumn<Expense>[] = [
     <UCard>
       <template #header><h3 class="font-medium">المصروفات</h3></template>
       <p v-if="expenses.length === 0" class="text-dimmed py-4 text-center text-sm">لا توجد مصروفات مسجلة</p>
-      <UTable v-else :data="expenses" :columns="expenseColumns">
+      <UTable v-else :data="expenses.filter(ex => ex.amount > 0)" :columns="expenseColumns">
         <template #category-cell="{ row }">{{ formatExpenseCategory(row.getValue('category')) }}</template>
         <template #amount-cell="{ row }">{{ formatValue(row.getValue('amount'), 'money') }}</template>
       </UTable>
@@ -211,7 +225,7 @@ const expenseColumns: TableColumn<Expense>[] = [
 
     <UCard v-if="hasTotalsData">
       <template #header><h3 class="font-medium">الإجماليات المصرح بها</h3></template>
-      <dl class="grid grid-cols-2 gap-3 text-sm sm:grid-cols-4">
+      <dl class="grid grid-cols-2 gap-3 text-sm py-2 px-4 sm:grid-cols-4">
         <div>
           <dt class="text-dimmed">الدخل المصرح به</dt>
           <dd>{{ formatValue(family.declared_income, 'money') }}</dd>
@@ -233,17 +247,29 @@ const expenseColumns: TableColumn<Expense>[] = [
 
     <UCard>
       <template #header><h3 class="font-medium">الاحتياجات</h3></template>
-      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+      <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 py-2 px-4">
         <div>
           <p class="text-dimmed mb-2 text-sm font-medium">الاحتياجات المصنفة</p>
           <p v-if="needs.length === 0" class="text-dimmed py-4 text-center text-sm">لا توجد احتياجات مسجلة</p>
           <ul v-else class="space-y-2">
             <li v-for="need in needs" :key="need.need_id" class="flex flex-wrap items-center gap-2">
-              <UTooltip v-if="need.source === 'inferred'" text="احتياج مستنتج بواسطة النموذج، يحتاج مراجعة">
-                <UBadge color="warning" variant="outline" icon="i-lucide-sparkles">مستنتج</UBadge>
+              <UTooltip :text="need.source === 'inferred' ? 'احتياج مستنتج بواسطة النموذج، يحتاج مراجعة' : 'احتياج مصرح به من الشيت'">
+                <UIcon
+                  :name="need.source === 'inferred' ? 'i-lucide-sparkles' : 'i-lucide-file-check'"
+                  :class="need.source === 'inferred' ? 'text-warning' : 'text-dimmed'"
+                  class="size-4 shrink-0"
+                />
               </UTooltip>
-              <UBadge v-else color="neutral" variant="subtle">مصرح به</UBadge>
               <span>{{ need.label }}</span>
+              <UBadge
+                v-if="need.status"
+                :color="needStatusColor(need.status)"
+                variant="solid"
+                :icon="needStatusIcon(need.status)"
+                class="font-semibold"
+              >
+                {{ need.status }}
+              </UBadge>
               <span v-if="need.note" class="text-dimmed text-sm">— {{ need.note }}</span>
             </li>
           </ul>
@@ -260,7 +286,7 @@ const expenseColumns: TableColumn<Expense>[] = [
 
     <UCard v-if="hasNotesData">
       <template #header><h3 class="font-medium">ملاحظات</h3></template>
-      <dl class="space-y-3 text-sm">
+      <dl class="space-y-3 text-sm py-2 px-4">
         <div v-if="family.general_notes">
           <dt class="text-dimmed">ملاحظات عامة</dt>
           <dd>{{ family.general_notes }}</dd>

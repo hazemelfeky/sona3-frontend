@@ -47,7 +47,7 @@ export const dashboards: Record<string, DashboardConfig> = {
     title: 'الأسر',
     source: 'v_families_list',
     defaultSort: { key: 'head_name', dir: 'asc' },
-    search: ['head_name', 'area', 'needs_raw'],
+    search: ['head_name', 'area', 'needs_raw', 'family_code'],
     filters: [
       { key: 'area', label: 'المنطقة', type: 'select' },
       { key: 'evaluation_status', label: 'الحالة', type: 'select' },

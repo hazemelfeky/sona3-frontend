@@ -98,6 +98,7 @@ export interface Database {
           need_code: string | null
           source: 'column' | 'inferred' | null
           note: string | null
+          status: string | null
         }
         Insert: Partial<Database['public']['Tables']['family_needs']['Row']>
         Update: Partial<Database['public']['Tables']['family_needs']['Row']>

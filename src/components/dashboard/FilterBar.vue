@@ -13,25 +13,26 @@ const values = defineModel<Record<string, unknown>>('values', { required: true }
 
 const derivedOptions = ref<Record<string, { label: string; value: unknown }[]>>({})
 
-async function loadOptions(filter: FilterDef) {
-  if (filter.options || filter.type !== 'select') return
-  const { data } = await db.from(props.source).select('*')
-  const rows = (data ?? []) as Record<string, unknown>[]
-  const unique = Array.from(
-    new Set(
-      rows
-        .map((row) => row[filter.key])
-        .filter((v: unknown) => v !== null && v !== undefined && v !== ''),
-    ),
-  )
-  derivedOptions.value[filter.key] = unique
-    .sort((a, b) => String(a).localeCompare(String(b), 'ar'))
-    .map((v) => ({ label: String(v), value: v }))
+// One request for every filter needing derived options, not one per filter —
+// each select-type filter otherwise triggered its own full-table fetch.
+async function loadOptions() {
+  const keys = props.filters.filter((f) => f.type === 'select' && !f.options).map((f) => f.key)
+  if (keys.length === 0) return
+
+  const { data } = await db.from(props.source).select(keys.join(','))
+  const rows = (data ?? []) as unknown as Record<string, unknown>[]
+
+  for (const key of keys) {
+    const unique = Array.from(
+      new Set(rows.map((row) => row[key]).filter((v: unknown) => v !== null && v !== undefined && v !== '')),
+    )
+    derivedOptions.value[key] = unique
+      .sort((a, b) => String(a).localeCompare(String(b), 'ar'))
+      .map((v) => ({ label: String(v), value: v }))
+  }
 }
 
-for (const filter of props.filters) {
-  loadOptions(filter)
-}
+loadOptions()
 
 function optionsFor(filter: FilterDef) {
   return filter.options ?? derivedOptions.value[filter.key] ?? []
@@ -55,7 +56,7 @@ const booleanOptions = [
 
 <template>
   <div class="flex flex-wrap items-center gap-3">
-    <UInput v-model="search" icon="i-lucide-search" placeholder="بحث..." class="w-full sm:w-64" />
+    <UInput v-model="search" icon="i-lucide-search" placeholder="بحث..." class="w-full sm:w-64 bg-info" />
 
     <template v-for="filter in filters" :key="filter.key">
       <USelectMenu
