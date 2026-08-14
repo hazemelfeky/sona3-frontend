@@ -66,6 +66,7 @@ export const dashboards: Record<string, DashboardConfig> = {
         { key: 'total_families', label: 'إجمالي الأسر', format: 'number', icon: 'i-lucide-home' },
         { key: 'accepted_families', label: 'أسر مقبولة', format: 'number', icon: 'i-lucide-check-circle' },
         { key: 'rejected_families', label: 'أسر مرفوضة', format: 'number', icon: 'i-lucide-x-circle' },
+        { key: 'pending_families', label: 'أسر مؤجلة', format: 'number', icon: 'i-lucide-clock' },
         { key: 'areas_count', label: 'عدد المناطق', format: 'number', icon: 'i-lucide-map-pin' },
         {
           key: 'families_with_needs',

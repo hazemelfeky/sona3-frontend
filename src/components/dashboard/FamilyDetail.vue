@@ -22,6 +22,11 @@ function anyDefined(...values: unknown[]): boolean {
   return values.some((v) => v !== null && v !== undefined && v !== '')
 }
 
+function copyRowId() {
+  if (props.family.row_id == null) return
+  navigator.clipboard.writeText(String(props.family.row_id))
+}
+
 const hasSpouseData = computed(() =>
   anyDefined(
     props.family.spouse_name,
@@ -114,8 +119,15 @@ const expenseColumns: TableColumn<Expense>[] = [
         {{ family.area ?? '—' }} · {{ formatValue(family.member_count, 'number') }} أفراد ·
         {{ formatValue(family.registration_date, 'date') }}
       </p>
-      <p v-if="family.source_sheet || family.row_id" class="text-dimmed mt-1 text-xs">
-        المصدر: {{ family.source_sheet ?? '—' }} · صف {{ family.row_id }}
+      <p v-if="family.source_sheet || family.row_id" class="text-dimmed mt-1 text-xs" title="البيانات فى الشيت">
+        المصدر: {{ family.source_sheet ?? '—' }} ·
+        <span
+          v-if="family.row_id"
+          class="cursor-pointer hover:underline"
+          title="نسخ رقم الصف"
+          @click="copyRowId"
+        >صف {{ family.row_id }}</span>
+        <span v-else>صف —</span>
       </p>
     </div>
 
