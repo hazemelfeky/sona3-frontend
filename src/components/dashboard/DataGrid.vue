@@ -23,6 +23,9 @@ const tableColumns = computed<TableColumn<Record<string, unknown>>[]>(() =>
   props.columns.map((col) => ({ accessorKey: col.key, header: col.label })),
 )
 
+const rangeStart = computed(() => (props.total === 0 ? 0 : (page.value - 1) * props.pageSize + 1))
+const rangeEnd = computed(() => rangeStart.value + props.rows.length - (props.rows.length ? 1 : 0))
+
 function toggleSort(col: ColumnDef) {
   if (col.sortable === false) return
   if (sortKey.value === col.key) {
@@ -46,6 +49,10 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
     <UAlert v-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
 
     <template v-else>
+      <p class="text-muted text-sm">
+        عرض {{ rangeStart }}-{{ rangeEnd }} من {{ total }}
+      </p>
+
       <UTable
         :data="rows"
         :columns="tableColumns"
