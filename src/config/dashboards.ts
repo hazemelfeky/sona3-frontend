@@ -87,11 +87,17 @@ export interface NavEntry {
   label: string
   icon: string
   slug?: string
+  to?: string // direct route, overrides the /dashboards/{slug} default
   disabled?: boolean
   children?: NavEntry[]
 }
 
 export const nav: NavEntry[] = [
+  {
+    label: 'الرئيسية',
+    icon: 'i-lucide-layout-dashboard',
+    to: '/dashboard',
+  },
   {
     label: 'الأسر',
     icon: 'i-lucide-home',

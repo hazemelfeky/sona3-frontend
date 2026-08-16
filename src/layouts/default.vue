@@ -1,7 +1,23 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 import { useDark } from '@vueuse/core'
+import { useRoute, useRouter } from 'vue-router'
 import { nav } from '@/config/dashboards'
+import { useStore } from '@/store'
+
+const route = useRoute()
+const router = useRouter()
+const store = useStore()
+
+async function logout() {
+  await store.signOut()
+  router.push('/auth/login')
+}
+// vite-plugin-vue-layouts-next always wraps the route tree in this layout
+// (inheritDefaultLayout), so a per-page custom layout would nest *inside*
+// this one instead of replacing it. Bare pages (auth) opt out of the shell
+// via this flag instead of a second layout.
+const isBare = computed(() => Boolean(route.meta.bare))
 
 const open = ref(false)
 
@@ -54,7 +70,7 @@ function getItems(_state: 'collapsed' | 'expanded') {
   return nav.map((entry) => ({
     label: entry.label,
     icon: entry.icon,
-    to: entry.slug ? `/dashboards/${entry.slug}` : undefined,
+    to: entry.to ?? (entry.slug ? `/dashboards/${entry.slug}` : undefined),
     disabled: entry.disabled,
   })) satisfies NavigationMenuItem[]
 }
@@ -73,15 +89,15 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
       label: 'Profile',
       icon: 'i-lucide-user',
     },
-    {
-      label: 'Billing',
-      icon: 'i-lucide-credit-card',
-    },
-    {
-      label: 'Settings',
-      icon: 'i-lucide-settings',
-      to: '/settings',
-    },
+    // {
+    //   label: 'Billing',
+    //   icon: 'i-lucide-credit-card',
+    // },
+    // {
+    //   label: 'Settings',
+    //   icon: 'i-lucide-settings',
+    //   to: '/settings',
+    // },
   ],
   [
     {
@@ -120,15 +136,16 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
     },
   ],
   [
-    {
-      label: 'GitHub',
-      icon: 'i-simple-icons-github',
-      to: 'https://github.com/nuxt/ui',
-      target: '_blank',
-    },
+    // {
+    //   label: 'GitHub',
+    //   icon: 'i-simple-icons-github',
+    //   to: 'https://github.com/nuxt/ui',
+    //   target: '_blank',
+    // },
     {
       label: 'Log out',
       icon: 'i-lucide-log-out',
+      onSelect: logout,
     },
   ],
 ])
@@ -137,12 +154,17 @@ defineShortcuts(extractShortcuts(teamsItems.value))
 </script>
 
 <template>
-  <div class="flex flex-1">
+  <div v-if="isBare" class="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+    <div class="w-full max-w-md">
+      <router-view />
+    </div>
+  </div>
+
+  <div v-else class="flex flex-1">
     <USidebar
       v-model:open="open"
       collapsible="icon"
       side="right"
-      rail
       :ui="{
         container: 'h-full',
         inner: 'bg-elevated/25 divide-transparent',

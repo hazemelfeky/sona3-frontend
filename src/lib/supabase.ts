@@ -20,3 +20,5 @@ export function warnIfEmptyFromRls(source: string, isEmpty: boolean, hadError: b
     )
   }
 }
+
+if (import.meta.env.DEV) (window as unknown as { supabase: typeof supabase }).supabase = supabase

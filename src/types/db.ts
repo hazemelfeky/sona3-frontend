@@ -103,6 +103,26 @@ export interface Database {
         Insert: Partial<Database['public']['Tables']['family_needs']['Row']>
         Update: Partial<Database['public']['Tables']['family_needs']['Row']>
       }
+      profiles: {
+        Row: {
+          user_id: string
+          username: string
+          full_name: string | null
+          phone: string | null
+          email: string | null
+          area: string | null
+          avatar_path: string | null
+          status: 'pending' | 'approved' | 'rejected'
+          admin_note: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          auth_email: string | null
+          created_at: string | null
+          updated_at: string | null
+        }
+        Insert: Partial<Database['public']['Tables']['profiles']['Row']> & { user_id: string }
+        Update: Partial<Database['public']['Tables']['profiles']['Row']>
+      }
     }
     Views: {
       v_families_list: {
