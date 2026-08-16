@@ -3,7 +3,7 @@ import type { NuxtUIOptions } from '@nuxt/ui/vite'
 export default <NuxtUIOptions>{
   colorMode: false,
   theme: {
-    colors: ['navy', 'purple', 'amber', 'blue', 'gray', 'red', 'green'],
+    colors: ['secondary', 'success', 'warning', 'info', 'error'],
   },
   autoImport: {
     imports: [

@@ -56,7 +56,7 @@ const booleanOptions = [
 
 <template>
   <div class="flex flex-wrap items-center gap-3">
-    <UInput v-model="search" icon="i-lucide-search" placeholder="بحث..." class="w-full sm:w-64 bg-info" />
+    <UInput v-model="search" icon="i-lucide-search" placeholder="بحث..." class="w-full sm:w-64 bg-neutral" />
 
     <template v-for="filter in filters" :key="filter.key">
       <USelectMenu
