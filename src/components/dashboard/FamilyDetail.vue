@@ -136,53 +136,53 @@ const expenseColumns: TableColumn<Expense>[] = [
       <div class="grid grid-cols-1 gap-6" :class="hasSpouseData ? 'sm:grid-cols-2' : ''">
         <dl class="grid grid-cols-2 gap-3 text-sm py-2 px-4">
           <p class="col-span-2 text-dimmed font-medium">رب الأسرة</p>
-          <div>
+          <div v-if="anyDefined(family.head_age)">
             <dt class="text-dimmed">العمر</dt>
             <dd>{{ formatValue(family.head_age, 'number') }}</dd>
           </div>
-          <div>
+          <div v-if="family.head_phone">
             <dt class="text-dimmed">الهاتف</dt>
-            <dd>{{ family.head_phone ?? '—' }}</dd>
+            <dd>{{ family.head_phone }}</dd>
           </div>
-          <div>
+          <div v-if="family.head_occupation">
             <dt class="text-dimmed">المهنة</dt>
-            <dd>{{ family.head_occupation ?? '—' }}</dd>
+            <dd>{{ family.head_occupation }}</dd>
           </div>
-          <div>
+          <div v-if="family.head_education">
             <dt class="text-dimmed">التعليم</dt>
-            <dd>{{ family.head_education ?? '—' }}</dd>
+            <dd>{{ family.head_education }}</dd>
           </div>
-          <div>
+          <div v-if="family.head_status">
             <dt class="text-dimmed">الحالة</dt>
-            <dd>{{ family.head_status ?? '—' }}</dd>
+            <dd>{{ family.head_status }}</dd>
           </div>
         </dl>
 
         <dl v-if="hasSpouseData" class="grid grid-cols-2 gap-3 text-sm py-2 px-4">
           <p class="col-span-2 text-dimmed font-medium">الزوج/الزوجة</p>
-          <div>
+          <div v-if="family.spouse_name">
             <dt class="text-dimmed">الاسم</dt>
-            <dd>{{ family.spouse_name ?? '—' }}</dd>
+            <dd>{{ family.spouse_name }}</dd>
           </div>
-          <div>
+          <div v-if="anyDefined(family.spouse_age)">
             <dt class="text-dimmed">العمر</dt>
             <dd>{{ formatValue(family.spouse_age, 'number') }}</dd>
           </div>
-          <div>
+          <div v-if="family.spouse_phone">
             <dt class="text-dimmed">الهاتف</dt>
-            <dd>{{ family.spouse_phone ?? '—' }}</dd>
+            <dd>{{ family.spouse_phone }}</dd>
           </div>
-          <div>
+          <div v-if="family.spouse_occupation">
             <dt class="text-dimmed">المهنة</dt>
-            <dd>{{ family.spouse_occupation ?? '—' }}</dd>
+            <dd>{{ family.spouse_occupation }}</dd>
           </div>
-          <div>
+          <div v-if="family.spouse_education">
             <dt class="text-dimmed">التعليم</dt>
-            <dd>{{ family.spouse_education ?? '—' }}</dd>
+            <dd>{{ family.spouse_education }}</dd>
           </div>
-          <div>
+          <div v-if="family.spouse_status">
             <dt class="text-dimmed">الحالة</dt>
-            <dd>{{ family.spouse_status ?? '—' }}</dd>
+            <dd>{{ family.spouse_status }}</dd>
           </div>
         </dl>
       </div>
@@ -191,17 +191,17 @@ const expenseColumns: TableColumn<Expense>[] = [
     <UCard v-if="hasHousingData">
       <template #header><h3 class="font-medium">السكن</h3></template>
       <dl class="grid grid-cols-2 gap-3 text-sm py-2 px-4 sm:grid-cols-3">
-        <div>
+        <div v-if="family.housing_type">
           <dt class="text-dimmed">نوع السكن</dt>
-          <dd>{{ family.housing_type ?? '—' }}</dd>
+          <dd>{{ family.housing_type }}</dd>
         </div>
-        <div>
+        <div v-if="anyDefined(family.blanket_count)">
           <dt class="text-dimmed">عدد البطاطين</dt>
           <dd>{{ formatValue(family.blanket_count, 'number') }}</dd>
         </div>
-        <div class="col-span-2 sm:col-span-1">
+        <div v-if="family.housing_condition_notes" class="col-span-2 sm:col-span-1">
           <dt class="text-dimmed">ملاحظات حالة السكن</dt>
-          <dd>{{ family.housing_condition_notes ?? '—' }}</dd>
+          <dd>{{ family.housing_condition_notes }}</dd>
         </div>
       </dl>
     </UCard>
@@ -238,21 +238,21 @@ const expenseColumns: TableColumn<Expense>[] = [
     <UCard v-if="hasTotalsData">
       <template #header><h3 class="font-medium">الإجماليات المصرح بها</h3></template>
       <dl class="grid grid-cols-2 gap-3 text-sm py-2 px-4 sm:grid-cols-4">
-        <div>
+        <div v-if="anyDefined(family.declared_income)">
           <dt class="text-dimmed">الدخل المصرح به</dt>
           <dd>{{ formatValue(family.declared_income, 'money') }}</dd>
         </div>
-        <div>
+        <div v-if="anyDefined(family.declared_expenses)">
           <dt class="text-dimmed">المصروفات المصرح بها</dt>
           <dd>{{ formatValue(family.declared_expenses, 'money') }}</dd>
         </div>
-        <div>
+        <div v-if="family.deficit_note">
           <dt class="text-dimmed">ملاحظة العجز</dt>
-          <dd>{{ family.deficit_note ?? '—' }}</dd>
+          <dd>{{ family.deficit_note }}</dd>
         </div>
-        <div>
+        <div v-if="family.deficit_coping">
           <dt class="text-dimmed">طريقة التعامل مع العجز</dt>
-          <dd>{{ family.deficit_coping ?? '—' }}</dd>
+          <dd>{{ family.deficit_coping }}</dd>
         </div>
       </dl>
     </UCard>
