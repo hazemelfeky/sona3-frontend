@@ -9,7 +9,7 @@ import {
   TooltipComponent,
   LegendComponent,
 } from 'echarts/components'
-import type { ChartDef } from '@/config/dashboards'
+import type { ChartDef } from '@/components/list-page/types'
 import { useChartData } from '@/composables/useChartData'
 import { formatMoney, formatNumber } from '@/utils/format'
 

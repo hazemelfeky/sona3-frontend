@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem } from '@nuxt/ui'
-import type { DashboardConfig } from '@/config/dashboards'
+import type { DashboardConfig } from '@/components/list-page/types'
 import { useDashboardData } from '@/composables/useDashboardData'
 import { useDashboardStats } from '@/composables/useDashboardStats'
 import { useStore } from '@/store'

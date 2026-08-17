@@ -2,7 +2,7 @@
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
 import { useDark, useMediaQuery } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
-import { nav } from '@/config/dashboards'
+import { nav } from '@/config/nav'
 import { useStore } from '@/store'
 import { supabase } from '@/lib/supabase'
 
@@ -97,7 +97,7 @@ function getItems(_state: 'collapsed' | 'expanded') {
     .map((entry) => ({
       label: entry.label,
       icon: entry.icon,
-      to: entry.to ?? (entry.slug ? `/dashboards/${entry.slug}` : undefined),
+      to: entry.to,
       disabled: entry.disabled,
     })) satisfies NavigationMenuItem[]
 }

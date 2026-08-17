@@ -46,7 +46,7 @@ async function onSubmit() {
 <template>
   <div class="max-w-4xl mx-auto space-y-4">
     <UButton
-      to="/dashboards/families"
+      to="/families"
       variant="ghost"
       color="neutral"
       icon="i-lucide-arrow-right"

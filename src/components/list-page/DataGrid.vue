@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import type { DropdownMenuItem, TableColumn } from '@nuxt/ui'
-import type { ColumnDef } from '@/config/dashboards'
+import type { ColumnDef } from '@/components/list-page/types'
 import { formatValue } from '@/utils/format'
 
 const props = defineProps<{

@@ -23,7 +23,7 @@ const { family, members, income, expenses, needs, loading, error } = useFamilyDe
 const deleteModalOpen = ref(false)
 
 function onFamilyDeleted() {
-  router.push('/dashboards/families')
+  router.push('/families')
 }
 </script>
 
@@ -31,7 +31,7 @@ function onFamilyDeleted() {
   <div class="space-y-4">
     <div class="flex flex-wrap items-center justify-between gap-2">
       <UButton
-        to="/dashboards/families"
+        to="/families"
         variant="ghost"
         color="neutral"
         icon="i-lucide-arrow-right"

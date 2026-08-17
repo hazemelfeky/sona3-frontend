@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { CardDef } from '@/config/dashboards'
+import type { CardDef } from '@/components/list-page/types'
 import { formatValue } from '@/utils/format'
 
 const props = defineProps<{

@@ -66,11 +66,11 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '//dashboards/[slug]': RouteRecordInfo<
-      '//dashboards/[slug]',
-      '/dashboards/:slug',
-      { slug: ParamValue<true> },
-      { slug: ParamValue<false> },
+    '//families/': RouteRecordInfo<
+      '//families/',
+      '/families',
+      Record<never, never>,
+      Record<never, never>,
       | never
     >,
     '//families/[id]/': RouteRecordInfo<
@@ -175,13 +175,13 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/features/dashboards/pages/[slug].vue': {
+    'src/features/families/pages/index.vue': {
       routes:
-        | '//dashboards/[slug]'
+        | '//families/'
       views:
         | never
       pathParamNames:
-        | 'slug'
+        | never
     }
     'src/features/families/pages/[id]/index.vue': {
       routes:

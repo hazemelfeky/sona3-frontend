@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import type { FilterDef } from '@/config/dashboards'
+import type { FilterDef } from '@/components/list-page/types'
 import { db } from '@/lib/supabase'
 
 const props = defineProps<{

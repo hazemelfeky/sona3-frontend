@@ -81,7 +81,7 @@ async function onSubmit() {
 <template>
   <div class="max-w-4xl mx-auto space-y-4">
     <UButton
-      :to="isValidId ? `/families/${familyId}` : '/dashboards/families'"
+      :to="isValidId ? `/families/${familyId}` : '/families'"
       variant="ghost"
       color="neutral"
       icon="i-lucide-arrow-right"

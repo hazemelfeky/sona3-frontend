@@ -1,7 +1,7 @@
 import { ref, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import { db, warnIfEmptyFromRls } from '@/lib/supabase'
-import type { DashboardConfig } from '@/config/dashboards'
+import type { DashboardConfig } from '@/components/list-page/types'
 
 export function useDashboardData(config: DashboardConfig) {
   const rows = ref<Record<string, unknown>[]>([])
