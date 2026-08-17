@@ -62,7 +62,7 @@ const colorClasses: Record<string, string> = {
 
 <template>
   <div class="space-y-6">
-    <h1 class="text-2xl font-semibold">الشؤون المالية</h1>
+    <h1 class="text-2xl font-semibold">الرئيسية</h1>
 
     <!-- Section 1: money -->
     <section class="space-y-4">

@@ -80,6 +80,34 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
+    '//permissions/': RouteRecordInfo<
+      '//permissions/',
+      '/permissions',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '//permissions/[userId]': RouteRecordInfo<
+      '//permissions/[userId]',
+      '/permissions/:userId',
+      { userId: ParamValue<true> },
+      { userId: ParamValue<false> },
+      | never
+    >,
+    '//profile/': RouteRecordInfo<
+      '//profile/',
+      '/profile',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '//profile/[userId]': RouteRecordInfo<
+      '//profile/[userId]',
+      '/profile/:userId',
+      { userId: ParamValue<true> },
+      { userId: ParamValue<false> },
+      | never
+    >,
   }
 
   /**
@@ -148,6 +176,38 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'id'
+    }
+    'src/features/permissions/pages/index.vue': {
+      routes:
+        | '//permissions/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/permissions/pages/[userId].vue': {
+      routes:
+        | '//permissions/[userId]'
+      views:
+        | never
+      pathParamNames:
+        | 'userId'
+    }
+    'src/features/profile/pages/index.vue': {
+      routes:
+        | '//profile/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/profile/pages/[userId].vue': {
+      routes:
+        | '//profile/[userId]'
+      views:
+        | never
+      pathParamNames:
+        | 'userId'
     }
   }
 

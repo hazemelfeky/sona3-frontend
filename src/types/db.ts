@@ -111,6 +111,9 @@ export interface Database {
           phone: string | null
           email: string | null
           area: string | null
+          birth_date: string | null
+          education: string | null
+          job: string | null
           avatar_path: string | null
           status: 'pending' | 'approved' | 'rejected'
           admin_note: string | null
@@ -122,6 +125,25 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['profiles']['Row']> & { user_id: string }
         Update: Partial<Database['public']['Tables']['profiles']['Row']>
+      }
+      permissions: {
+        Row: {
+          code: string
+          label_ar: string
+          category: string
+          description: string | null
+          sort_order: number
+        }
+        Insert: Partial<Database['public']['Tables']['permissions']['Row']> & { code: string }
+        Update: Partial<Database['public']['Tables']['permissions']['Row']>
+      }
+      permission_templates: {
+        Row: {
+          name_ar: string
+          perm_codes: string[]
+        }
+        Insert: Partial<Database['public']['Tables']['permission_templates']['Row']>
+        Update: Partial<Database['public']['Tables']['permission_templates']['Row']>
       }
     }
     Views: {
@@ -158,6 +180,16 @@ export interface Database {
         Row: {
           label: string
           value: number
+        }
+      }
+      v_users_with_perms: {
+        Row: {
+          user_id: string
+          username: string
+          full_name: string | null
+          area: string | null
+          status: 'pending' | 'approved' | 'rejected'
+          perms: string[]
         }
       }
     }

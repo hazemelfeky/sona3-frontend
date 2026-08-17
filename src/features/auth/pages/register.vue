@@ -76,7 +76,7 @@ async function onSubmit() {
       <h1 class="text-lg font-bold">إنشاء حساب</h1>
     </template>
 
-    <form class="space-y-4" @submit.prevent="onSubmit">
+    <form class="space-y-4 p-2" @submit.prevent="onSubmit">
       <UFormField label="اسم المستخدم">
         <UInput v-model="username" class="w-full" placeholder="ahmed_test" autocomplete="username" />
         <p v-if="usernameHint" class="text-xs mt-1" :class="usernameHint.class">{{ usernameHint.text }}</p>

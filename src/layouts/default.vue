@@ -4,6 +4,7 @@ import { useDark } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { nav } from '@/config/dashboards'
 import { useStore } from '@/store'
+import { supabase } from '@/lib/supabase'
 
 const route = useRoute()
 const router = useRouter()
@@ -13,6 +14,21 @@ async function logout() {
   await store.signOut()
   router.push('/auth/login')
 }
+
+const userAvatarUrl = ref<string | null>(null)
+
+// Signed URL, not cached — expires in 1h, regenerated whenever the avatar
+// path changes (including on login/refresh via store.profile).
+watch(
+  () => store.profile?.avatar_path,
+  async (path) => {
+    userAvatarUrl.value = null
+    if (!path) return
+    const { data } = await supabase.storage.from('avatars').createSignedUrl(path, 3600)
+    userAvatarUrl.value = data?.signedUrl ?? null
+  },
+  { immediate: true },
+)
 // vite-plugin-vue-layouts-next always wraps the route tree in this layout
 // (inheritDefaultLayout), so a per-page custom layout would nest *inside*
 // this one instead of replacing it. Bare pages (auth) opt out of the shell
@@ -67,27 +83,28 @@ const teamsItems = computed<DropdownMenuItem[][]>(() => {
 })
 
 function getItems(_state: 'collapsed' | 'expanded') {
-  return nav.map((entry) => ({
-    label: entry.label,
-    icon: entry.icon,
-    to: entry.to ?? (entry.slug ? `/dashboards/${entry.slug}` : undefined),
-    disabled: entry.disabled,
-  })) satisfies NavigationMenuItem[]
+  return nav
+    .filter((entry) => !entry.requiresPerm || store.hasPerm(entry.requiresPerm))
+    .map((entry) => ({
+      label: entry.label,
+      icon: entry.icon,
+      to: entry.to ?? (entry.slug ? `/dashboards/${entry.slug}` : undefined),
+      disabled: entry.disabled,
+    })) satisfies NavigationMenuItem[]
 }
 
-const user = ref({
-  name: 'Benjamin Canac',
-  avatar: {
-    src: 'https://github.com/benjamincanac.png',
-    alt: 'Benjamin Canac',
-  },
-})
+const userName = computed(() => store.profile?.full_name || store.profile?.username || '')
+const userAvatar = computed(() => ({
+  src: userAvatarUrl.value ?? undefined,
+  alt: userName.value,
+}))
 
 const userItems = computed<DropdownMenuItem[][]>(() => [
   [
     {
       label: 'Profile',
       icon: 'i-lucide-user',
+      to: store.userId ? `/profile/${store.userId}` : undefined,
     },
     // {
     //   label: 'Billing',
@@ -208,8 +225,8 @@ defineShortcuts(extractShortcuts(teamsItems.value))
           :ui="{ content: 'w-(--reka-dropdown-menu-trigger-width) min-w-48' }"
         >
           <UButton
-            v-bind="user"
-            :label="user?.name"
+            :avatar="userAvatar"
+            :label="userName"
             trailing-icon="i-lucide-chevrons-up-down"
             color="neutral"
             variant="ghost"

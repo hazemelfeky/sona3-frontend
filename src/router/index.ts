@@ -22,13 +22,16 @@ router.beforeEach(async (to) => {
     return AUTH_ENTRY_PAGES.includes(to.path) ? true : '/auth/login'
   }
 
-  console.log('store', store.status);
-  
   if (store.status === 'pending' && to.path !== '/auth/pending') return '/auth/pending'
   if (store.status === 'rejected' && to.path !== '/auth/rejected') return '/auth/rejected'
   if (store.status === 'approved' && (AUTH_ENTRY_PAGES.includes(to.path) || to.path === '/auth/pending' || to.path === '/auth/rejected')) {
     return '/dashboard'
   }
+
+  // UX-level gate only — the DB (RLS + rpc checks) is the real enforcement,
+  // this just avoids sending someone straight to a page that will only
+  // ever show them empty/rejected results.
+  if (to.path.startsWith('/permissions') && !store.hasPerm('users.permissions')) return '/dashboard'
 
   return true
 })

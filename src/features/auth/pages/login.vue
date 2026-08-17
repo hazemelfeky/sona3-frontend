@@ -43,7 +43,7 @@ async function onSubmit() {
       <h1 class="text-lg font-bold">تسجيل الدخول</h1>
     </template>
 
-    <form class="space-y-4" @submit.prevent="onSubmit">
+    <form class="space-y-4 p-2" @submit.prevent="onSubmit">
       <UFormField label="اسم المستخدم أو رقم الموبايل أو الإيميل">
         <UInput v-model="identifier" class="w-full" autocomplete="username" />
       </UFormField>
@@ -63,7 +63,7 @@ async function onSubmit() {
       <UButton type="submit" block :loading="submitting" :disabled="!canSubmit"> دخول </UButton>
 
       <p class="text-sm text-center text-dimmed">
-        مالكش حساب؟
+        ملكش حساب؟
         <RouterLink to="/auth/register" class="text-primary">سجّل واحد جديد</RouterLink>
       </p>
     </form>

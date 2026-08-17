@@ -10,9 +10,9 @@ import type { Database } from '@/types/db'
 type ProfileRow = Database['public']['Tables']['profiles']['Row']
 export type Profile = Pick<
   ProfileRow,
-  'user_id' | 'username' | 'full_name' | 'phone' | 'email' | 'area' | 'status'
+  'user_id' | 'username' | 'full_name' | 'phone' | 'email' | 'area' | 'status' | 'avatar_path'
 >
-const PROFILE_COLUMNS = 'user_id, username, full_name, phone, email, area, status'
+const PROFILE_COLUMNS = 'user_id, username, full_name, phone, email, area, status, avatar_path'
 
 // Supabase requires an email on every account, so each user gets a
 // meaningless placeholder at signup. The user never enters or sees it —
@@ -44,11 +44,20 @@ export const useStore = defineStore('app', () => {
   const userId = ref<string | null>(null)
   const initialized = ref(false)
   const authLoading = ref(false)
+  // Permission codes for the signed-in user, loaded once via rpc('my_perms')
+  // and kept in the store — never refetched on navigation, only after init,
+  // sign-in, or a mutation that could change them.
+  const perms = ref<string[]>([])
+  const permsSet = computed(() => new Set(perms.value))
 
   const isAuthenticated = computed(() => userId.value !== null)
   // A signed-in user with no profile row yet (trigger still running) is
   // treated as pending, never as approved.
   const status = computed(() => profile.value?.status ?? (isAuthenticated.value ? 'pending' : null))
+
+  function hasPerm(code: string) {
+    return permsSet.value.has(code)
+  }
 
   async function fetchProfile(id: string) {
     const { data, error } = await supabase
@@ -60,6 +69,22 @@ export const useStore = defineStore('app', () => {
     profile.value = data
   }
 
+  async function loadPerms() {
+    // rpc() fights the typed client's literal-key generics here (same
+    // reason lib/supabase.ts keeps the untyped `db` alias).
+    const { data, error } = (await db.rpc('my_perms')) as {
+      data: string[] | null
+      error: { message: string } | null
+    }
+    if (error && import.meta.env.DEV) console.error('[auth] loadPerms failed:', error.message)
+    perms.value = data ?? []
+  }
+
+  async function refreshSession(id: string) {
+    await fetchProfile(id)
+    await loadPerms()
+  }
+
   async function init() {
     if (initialized.value) return
     initialized.value = true
@@ -68,14 +93,17 @@ export const useStore = defineStore('app', () => {
       data: { session },
     } = await supabase.auth.getSession()
     userId.value = session?.user.id ?? null
-    if (userId.value) await fetchProfile(userId.value)
+    if (userId.value) await refreshSession(userId.value)
 
     supabase.auth.onAuthStateChange((_event, changedSession) => {
       const nextId = changedSession?.user.id ?? null
       if (nextId === userId.value) return
       userId.value = nextId
-      if (nextId) void fetchProfile(nextId)
-      else profile.value = null
+      if (nextId) void refreshSession(nextId)
+      else {
+        profile.value = null
+        perms.value = []
+      }
     })
   }
 
@@ -120,7 +148,7 @@ export const useStore = defineStore('app', () => {
       if (error || !data.user) throw error ?? new Error('sign in failed')
 
       userId.value = data.user.id
-      await fetchProfile(data.user.id)
+      await refreshSession(data.user.id)
     } catch {
       // Never distinguish "not found" from "wrong password" — that gap is
       // exactly what would let someone enumerate registered accounts.
@@ -134,14 +162,19 @@ export const useStore = defineStore('app', () => {
     await supabase.auth.signOut()
     userId.value = null
     profile.value = null
+    perms.value = []
   }
 
   return {
     profile,
+    userId,
+    perms,
     isAuthenticated,
     status,
     initialized,
     authLoading,
+    hasPerm,
+    refreshSession,
     init,
     signUp,
     signIn,

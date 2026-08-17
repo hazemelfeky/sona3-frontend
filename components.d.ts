@@ -21,9 +21,11 @@ declare module 'vue' {
     StatCards: typeof import('./src/components/dashboard/StatCards.vue')['default']
     UAlert: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Alert.vue')['default']
     UApp: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
+    UAvatar: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Avatar.vue')['default']
     UBadge: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Badge.vue')['default']
     UButton: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Button.vue')['default']
     UCard: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Card.vue')['default']
+    UCheckbox: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Checkbox.vue')['default']
     UDropdownMenu: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/DropdownMenu.vue')['default']
     UFormField: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/FormField.vue')['default']
     UIcon: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/vue/components/Icon.vue')['default']
@@ -32,9 +34,11 @@ declare module 'vue' {
     UPageGrid: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/PageGrid.vue')['default']
     UPagination: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Pagination.vue')['default']
     USelectMenu: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/SelectMenu.vue')['default']
+    USeparator: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Separator.vue')['default']
     USidebar: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Sidebar.vue')['default']
     USkeleton: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue')['default']
     UTable: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Table.vue')['default']
+    UTextarea: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Textarea.vue')['default']
     UTooltip: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Tooltip.vue')['default']
   }
 }

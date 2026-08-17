@@ -90,6 +90,7 @@ export interface NavEntry {
   to?: string // direct route, overrides the /dashboards/{slug} default
   disabled?: boolean
   children?: NavEntry[]
+  requiresPerm?: string // hidden unless the current user holds this permission (UX only — DB still enforces)
 }
 
 export const nav: NavEntry[] = [
@@ -112,5 +113,11 @@ export const nav: NavEntry[] = [
     label: 'الشؤون المالية',
     icon: 'i-lucide-wallet',
     disabled: true,
+  },
+  {
+    label: 'الصلاحيات',
+    icon: 'i-lucide-shield-check',
+    to: '/permissions',
+    requiresPerm: 'users.permissions',
   },
 ]
