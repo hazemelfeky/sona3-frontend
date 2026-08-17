@@ -73,11 +73,25 @@ declare module 'vue-router/auto-routes' {
       { slug: ParamValue<false> },
       | never
     >,
-    '//families/[id]': RouteRecordInfo<
-      '//families/[id]',
+    '//families/[id]/': RouteRecordInfo<
+      '//families/[id]/',
       '/families/:id',
       { id: ParamValue<true> },
       { id: ParamValue<false> },
+      | never
+    >,
+    '//families/[id]/edit': RouteRecordInfo<
+      '//families/[id]/edit',
+      '/families/:id/edit',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
+    '//families/new': RouteRecordInfo<
+      '//families/new',
+      '/families/new',
+      Record<never, never>,
+      Record<never, never>,
       | never
     >,
     '//permissions/': RouteRecordInfo<
@@ -169,13 +183,29 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | 'slug'
     }
-    'src/features/families/pages/[id].vue': {
+    'src/features/families/pages/[id]/index.vue': {
       routes:
-        | '//families/[id]'
+        | '//families/[id]/'
       views:
         | never
       pathParamNames:
-        | 'id'
+        | never
+    }
+    'src/features/families/pages/[id]/edit.vue': {
+      routes:
+        | '//families/[id]/edit'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/families/pages/new.vue': {
+      routes:
+        | '//families/new'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
     'src/features/permissions/pages/index.vue': {
       routes:

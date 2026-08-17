@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  requiresPerm: users.permissions
+</route>
+
 <script setup lang="ts">
 import { useMembersList } from '@/features/permissions/composables/useMembersList'
 

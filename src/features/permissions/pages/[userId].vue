@@ -1,3 +1,8 @@
+<route lang="yaml">
+meta:
+  requiresPerm: users.permissions
+</route>
+
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'

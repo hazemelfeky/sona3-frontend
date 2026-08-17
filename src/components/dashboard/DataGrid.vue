@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import type { TableColumn } from '@nuxt/ui'
+import type { DropdownMenuItem, TableColumn } from '@nuxt/ui'
 import type { ColumnDef } from '@/config/dashboards'
 import { formatValue } from '@/utils/format'
 
@@ -11,6 +11,10 @@ const props = defineProps<{
   error: string | null
   total: number
   pageSize: number
+  // Per-row menu items rendered as a trailing actions column. Omit the
+  // column entirely when not supplied (a generic dashboard with no
+  // domain-specific actions shouldn't grow an empty trailing column).
+  rowActions?: (row: Record<string, unknown>) => DropdownMenuItem[]
 }>()
 
 const page = defineModel<number>('page', { required: true })
@@ -19,9 +23,14 @@ const sortDir = defineModel<'asc' | 'desc'>('sortDir', { required: true })
 
 const emit = defineEmits<{ rowClick: [row: Record<string, unknown>] }>()
 
-const tableColumns = computed<TableColumn<Record<string, unknown>>[]>(() =>
-  props.columns.map((col) => ({ accessorKey: col.key, header: col.label })),
-)
+const tableColumns = computed<TableColumn<Record<string, unknown>>[]>(() => {
+  const cols: TableColumn<Record<string, unknown>>[] = props.columns.map((col) => ({
+    accessorKey: col.key,
+    header: col.label,
+  }))
+  if (props.rowActions) cols.push({ id: 'actions', header: '' })
+  return cols
+})
 
 const rangeStart = computed(() => (props.total === 0 ? 0 : (page.value - 1) * props.pageSize + 1))
 const rangeEnd = computed(() => rangeStart.value + props.rows.length - (props.rows.length ? 1 : 0))
@@ -82,6 +91,21 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
             {{ formatValue(row.getValue(col.key), col.format) }}
           </UBadge>
           <span v-else>{{ formatValue(row.getValue(col.key), col.format) }}</span>
+        </template>
+
+        <template v-if="rowActions" #actions-cell="{ row }">
+          <div class="flex justify-end" @click.stop>
+            <UDropdownMenu v-if="rowActions(row.original).length" :items="rowActions(row.original)">
+              <UButton
+                icon="i-lucide-more-vertical"
+                variant="ghost"
+                color="neutral"
+                size="sm"
+                square
+                aria-label="إجراءات"
+              />
+            </UDropdownMenu>
+          </div>
         </template>
       </UTable>
 

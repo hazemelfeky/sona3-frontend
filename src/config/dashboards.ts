@@ -1,6 +1,7 @@
 export interface DashboardConfig {
   title: string
   source: string // view name for the table
+  requiresPerm?: string // hidden/redirected unless the current user holds this permission
   fixedFilter?: Record<string, unknown> // always-applied filter (not user-editable)
   defaultSort?: { key: string; dir: 'asc' | 'desc' }
   search?: string[] // columns included in text search
@@ -46,6 +47,7 @@ export const dashboards: Record<string, DashboardConfig> = {
   families: {
     title: 'الأسر',
     source: 'v_families_list',
+    requiresPerm: 'families.view',
     defaultSort: { key: 'head_name', dir: 'asc' },
     search: ['head_name', 'area', 'needs_raw', 'family_code'],
     filters: [
@@ -103,16 +105,19 @@ export const nav: NavEntry[] = [
     label: 'الأسر',
     icon: 'i-lucide-home',
     slug: 'families',
+    requiresPerm: 'families.view',
   },
   {
     label: 'المتطوعون',
     icon: 'i-lucide-users',
     disabled: true,
+    requiresPerm: 'users.view',
   },
   {
     label: 'الشؤون المالية',
     icon: 'i-lucide-wallet',
     disabled: true,
+    requiresPerm: 'finance.view',
   },
   {
     label: 'الصلاحيات',
