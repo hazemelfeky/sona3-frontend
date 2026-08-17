@@ -78,7 +78,7 @@ export default <NuxtUIOptions>{
       slots: {
         root: 'rounded-lg overflow-hidden ring-0',
         header: 'p-4 sm:px-6',
-        body: 'sm:p-0 sm:pt-0 h-full',
+        body: 'p-0 sm:p-0 pt-0 h-full',
         footer: 'p-4 sm:px-6',
       },
       defaultVariants: { variant: 'soft' },
@@ -90,7 +90,8 @@ export default <NuxtUIOptions>{
     },
     dropdownMenu: {
       slots: {
-        content: 'z-[100] bg-elevated text-highlighted ring-1 ring-default rounded-xl shadow-xl p-1.5',
+        content:
+          'z-[100] bg-elevated text-highlighted ring-1 ring-default rounded-xl shadow-xl p-1.5',
         viewport: 'relative divide-y divide-default scroll-py-1 overflow-y-auto flex-1',
         arrow: 'fill-default',
         group: 'p-1 isolate',
@@ -248,11 +249,20 @@ export default <NuxtUIOptions>{
       slots: { content: 'bg-inverted text-inverted rounded-lg p-2' },
       arrow: 'fill-inverted',
     },
+    slideover: {
+      slots: {
+        overlay: 'z-40',
+        content: 'z-50',
+      },
+    },
     sidebar: {
       compoundVariants: [
         {
           side: 'right',
-          class: { root: 'border-s-0 border-e border-default', container: 'border-s-0 border-e border-default' },
+          class: {
+            root: 'border-s-0 border-e border-default',
+            container: 'border-s-0 border-e border-default',
+          },
         },
       ],
     },
