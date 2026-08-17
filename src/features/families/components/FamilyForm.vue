@@ -6,12 +6,12 @@ import {
   type FamilyFormState,
 } from '@/features/families/composables/useFamilyForm'
 import { useNeedTypesCatalog } from '@/features/families/composables/useNeedTypesCatalog'
+import { familyFormSections } from '@/features/families/config/form'
+import FormSection from '@/features/families/components/FormSection.vue'
 
 const form = defineModel<FamilyFormState>({ required: true })
 
 const { needTypes } = useNeedTypesCatalog()
-
-const evaluationOptions = ['مقبولة', 'مرفوضة', 'مؤجلة']
 
 function addMember() {
   form.value.members.push(emptyMemberForm())
@@ -28,109 +28,45 @@ function needStatusFor(code: string) {
 function setNeedStatus(code: string, status: string) {
   form.value.needStatus[code] = status as (typeof NEED_STATUS_OPTIONS)[number]
 }
+
+function setField(fullKey: string, value: string) {
+  ;(form.value as unknown as Record<string, string>)[fullKey] = value
+}
+
+// Only the general/housing sections need 3 columns — the rest read better
+// at 2. Column count is layout, so it lives here in the renderer rather
+// than in familyFormSections (which describes fields only).
+const sectionGridClass: Record<string, string> = {
+  'بيانات عامة': 'sm:grid-cols-3',
+  'رب الأسرة': 'sm:grid-cols-2',
+  'الزوج/الزوجة': 'sm:grid-cols-2',
+  'السكن': 'sm:grid-cols-3',
+  'الإجماليات المصرح بها': 'sm:grid-cols-2',
+}
 </script>
 
 <template>
   <div class="space-y-6">
-    <UCard>
-      <template #header><h3 class="font-medium">بيانات عامة</h3></template>
-      <div class="grid grid-cols-1 gap-4 p-2 sm:grid-cols-3">
-        <UFormField label="المنطقة">
-          <UInput v-model="form.area" class="w-full" />
-        </UFormField>
-        <UFormField label="العنوان" class="sm:col-span-2">
-          <UInput v-model="form.address" class="w-full" />
-        </UFormField>
-        <UFormField label="تاريخ التسجيل">
-          <UInput v-model="form.registration_date" type="date" class="w-full" />
-        </UFormField>
-        <UFormField label="حالة التقييم">
-          <USelectMenu
-            v-model="form.evaluation_status"
-            :items="evaluationOptions"
-            placeholder="اختر الحالة"
-            class="w-full"
-          />
-        </UFormField>
-        <!-- <UFormField label="مستوى الثقة">
-          <USelectMenu
-            v-model="form.confidence"
-            :items="confidenceOptions"
-            value-key="value"
-            label-key="label"
-            placeholder="اختر المستوى"
-            class="w-full"
-          />
-        </UFormField> -->
-      </div>
-    </UCard>
-
-    <UCard>
-      <template #header><h3 class="font-medium">رب الأسرة</h3></template>
-      <div class="grid grid-cols-1 gap-4 p-2 sm:grid-cols-2">
-        <UFormField label="الاسم" required>
-          <UInput v-model="form.head_name" class="w-full" />
-        </UFormField>
-        <UFormField label="العمر">
-          <UInput v-model="form.head_age" type="number" class="w-full" />
-        </UFormField>
-        <UFormField label="الهاتف">
-          <UInput v-model="form.head_phone" class="w-full" />
-        </UFormField>
-        <UFormField label="المهنة">
-          <UInput v-model="form.head_occupation" class="w-full" />
-        </UFormField>
-        <UFormField label="التعليم">
-          <UInput v-model="form.head_education" class="w-full" />
-        </UFormField>
-        <UFormField label="الحالة">
-          <UInput v-model="form.head_status" class="w-full" />
-        </UFormField>
-        <UFormField label="ملاحظات" class="sm:col-span-2">
-          <UTextarea v-model="form.head_notes" class="w-full" :rows="2" />
-        </UFormField>
-      </div>
-    </UCard>
-
-    <UCard>
-      <template #header><h3 class="font-medium">الزوج/الزوجة</h3></template>
-      <div class="grid grid-cols-1 gap-4 p-2 sm:grid-cols-2">
-        <UFormField label="الاسم">
-          <UInput v-model="form.spouse_name" class="w-full" />
-        </UFormField>
-        <UFormField label="العمر">
-          <UInput v-model="form.spouse_age" type="number" class="w-full" />
-        </UFormField>
-        <UFormField label="الهاتف">
-          <UInput v-model="form.spouse_phone" class="w-full" />
-        </UFormField>
-        <UFormField label="المهنة">
-          <UInput v-model="form.spouse_occupation" class="w-full" />
-        </UFormField>
-        <UFormField label="التعليم">
-          <UInput v-model="form.spouse_education" class="w-full" />
-        </UFormField>
-        <UFormField label="الحالة">
-          <UInput v-model="form.spouse_status" class="w-full" />
-        </UFormField>
-        <UFormField label="ملاحظات" class="sm:col-span-2">
-          <UTextarea v-model="form.spouse_notes" class="w-full" :rows="2" />
-        </UFormField>
-      </div>
-    </UCard>
-
-    <UCard>
-      <template #header><h3 class="font-medium">السكن</h3></template>
-      <div class="grid grid-cols-1 gap-4 p-2 sm:grid-cols-3">
-        <UFormField label="نوع السكن">
-          <UInput v-model="form.housing_type" class="w-full" />
-        </UFormField>
-        <UFormField label="عدد البطاطين">
-          <UInput v-model="form.blanket_count" type="number" class="w-full" />
-        </UFormField>
-        <UFormField label="ملاحظات حالة السكن" class="sm:col-span-3">
-          <UTextarea v-model="form.housing_condition_notes" class="w-full" :rows="2" />
-        </UFormField>
+    <UCard v-for="section in familyFormSections" :key="section.title">
+      <template #header><h3 class="font-medium">{{ section.title }}</h3></template>
+      <div class="grid grid-cols-1 gap-4 p-2" :class="sectionGridClass[section.title]">
+        <FormSection
+          :fields="section.fields"
+          :prefix="section.prefix"
+          :form="form"
+          @change="setField"
+        >
+          <template #head_name="{ field }">
+            <UFormField :label="field.label" required>
+              <UInput v-model="form.head_name" class="w-full" />
+            </UFormField>
+          </template>
+          <template #address="{ field }">
+            <UFormField :label="field.label" class="sm:col-span-2">
+              <UInput v-model="form.address" class="w-full" />
+            </UFormField>
+          </template>
+        </FormSection>
       </div>
     </UCard>
 
@@ -225,31 +161,6 @@ function setNeedStatus(code: string, status: string) {
           :rows="2"
           placeholder="أي احتياج مش موجود فوق"
         />
-      </div>
-    </UCard>
-
-    <UCard>
-      <template #header><h3 class="font-medium">الإجماليات المصرح بها</h3></template>
-      <div class="grid grid-cols-1 gap-4 p-2 sm:grid-cols-2">
-        <UFormField label="الدخل المصرح به">
-          <UInput v-model="form.declared_income" type="number" class="w-full" />
-        </UFormField>
-        <UFormField label="المصروفات المصرح بها">
-          <UInput v-model="form.declared_expenses" type="number" class="w-full" />
-        </UFormField>
-        <UFormField label="ملاحظة العجز">
-          <UInput v-model="form.deficit_note" class="w-full" />
-        </UFormField>
-        <UFormField label="طريقة التعامل مع العجز">
-          <UInput v-model="form.deficit_coping" class="w-full" />
-        </UFormField>
-      </div>
-    </UCard>
-
-    <UCard>
-      <template #header><h3 class="font-medium">ملاحظات عامة</h3></template>
-      <div class="p-2">
-        <UTextarea v-model="form.general_notes" class="w-full" :rows="3" />
       </div>
     </UCard>
   </div>
