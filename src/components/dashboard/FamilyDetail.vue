@@ -229,7 +229,7 @@ const expenseColumns: TableColumn<Expense>[] = [
     <UCard>
       <template #header><h3 class="font-medium">المصروفات</h3></template>
       <p v-if="expenses.length === 0" class="text-dimmed py-4 text-center text-sm">لا توجد مصروفات مسجلة</p>
-      <UTable v-else :data="expenses.filter(ex => ex.amount > 0)" :columns="expenseColumns">
+      <UTable v-else :data="expenses.filter(ex => ex.amount !== null && ex.amount > 0)" :columns="expenseColumns">
         <template #category-cell="{ row }">{{ formatExpenseCategory(row.getValue('category')) }}</template>
         <template #amount-cell="{ row }">{{ formatValue(row.getValue('amount'), 'money') }}</template>
       </UTable>
