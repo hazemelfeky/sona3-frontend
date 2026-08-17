@@ -188,10 +188,10 @@ async function onAvatarChange(e: Event) {
 
         <template v-if="isSelf && !catalogLoading">
           <USeparator class="my-4" />
-          <p class="text-xs font-medium text-dimmed mb-2">الصلاحيات</p>
+          <p class="text-xs font-medium text-dimmed mx-2">الصلاحيات</p>
           <div
             v-if="store.perms.length"
-            class="flex flex-wrap gap-1.5 justify-center lg:justify-start"
+            class="flex flex-wrap gap-1.5 justify-center lg:justify-start p-2"
           >
             <UBadge
               v-for="code in store.perms"
