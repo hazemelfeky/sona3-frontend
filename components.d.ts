@@ -11,16 +11,14 @@ export {}
 /* prettier-ignore */
 declare module 'vue' {
   export interface GlobalComponents {
-    ChartBlock: typeof import('./src/components/dashboard/ChartBlock.vue')['default']
-    DashboardView: typeof import('./src/components/dashboard/DashboardView.vue')['default']
-    DataGrid: typeof import('./src/components/dashboard/DataGrid.vue')['default']
-    DeleteFamilyModal: typeof import('./src/components/dashboard/DeleteFamilyModal.vue')['default']
-    FamilyDetail: typeof import('./src/components/dashboard/FamilyDetail.vue')['default']
-    FamilyForm: typeof import('./src/components/dashboard/FamilyForm.vue')['default']
-    FilterBar: typeof import('./src/components/dashboard/FilterBar.vue')['default']
+    ChartBlock: typeof import('./src/components/list-page/ChartBlock.vue')['default']
+    DashboardView: typeof import('./src/components/list-page/DashboardView.vue')['default']
+    DataGrid: typeof import('./src/components/list-page/DataGrid.vue')['default']
+    DeleteFamilyModal: typeof import('./src/components/DeleteFamilyModal.vue')['default']
+    FilterBar: typeof import('./src/components/list-page/FilterBar.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
-    StatCards: typeof import('./src/components/dashboard/StatCards.vue')['default']
+    StatCards: typeof import('./src/components/list-page/StatCards.vue')['default']
     UAlert: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Alert.vue')['default']
     UApp: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/App.vue')['default']
     UAvatar: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Avatar.vue')['default']

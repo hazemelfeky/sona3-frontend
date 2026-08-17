@@ -15,7 +15,7 @@ import {
   type OriginalNeed,
 } from '@/features/families/composables/useFamilyMutations'
 import { useNeedTypesCatalog } from '@/features/families/composables/useNeedTypesCatalog'
-import FamilyForm from '@/components/dashboard/FamilyForm.vue'
+import FamilyForm from '@/features/families/components/FamilyForm.vue'
 
 const route = useRoute()
 const router = useRouter()

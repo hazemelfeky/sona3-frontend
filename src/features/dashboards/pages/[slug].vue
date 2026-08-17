@@ -4,8 +4,8 @@ import { useRoute, useRouter } from 'vue-router'
 import type { DropdownMenuItem } from '@nuxt/ui'
 import { dashboards } from '@/config/dashboards'
 import { useStore } from '@/store'
-import DashboardView from '@/components/dashboard/DashboardView.vue'
-import DeleteFamilyModal from '@/components/dashboard/DeleteFamilyModal.vue'
+import DashboardView from '@/components/list-page/DashboardView.vue'
+import DeleteFamilyModal from '@/components/DeleteFamilyModal.vue'
 
 const route = useRoute()
 const router = useRouter()

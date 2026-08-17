@@ -8,8 +8,8 @@ import { computed, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import { useFamilyDetail } from '@/composables/useFamilyDetail'
-import FamilyDetail from '@/components/dashboard/FamilyDetail.vue'
-import DeleteFamilyModal from '@/components/dashboard/DeleteFamilyModal.vue'
+import FamilyDetail from '@/features/families/components/FamilyDetail.vue'
+import DeleteFamilyModal from '@/components/DeleteFamilyModal.vue'
 
 const route = useRoute()
 const router = useRouter()
