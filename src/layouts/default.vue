@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { DropdownMenuItem, NavigationMenuItem } from '@nuxt/ui'
-import { useDark } from '@vueuse/core'
+import { useDark, useMediaQuery } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { nav } from '@/config/dashboards'
 import { useStore } from '@/store'
@@ -36,6 +36,15 @@ watch(
 const isBare = computed(() => Boolean(route.meta.bare))
 
 const open = ref(false)
+
+// Matches USidebar's own mobile breakpoint (see Sidebar.vue) — only the
+// mobile slideover should auto-close on select; on desktop `open` also
+// drives the collapsible sidebar, so closing it there would collapse it.
+const isMobile = useMediaQuery('(max-width: 1023px)')
+function closeMobileDrawer() {
+  if (isMobile.value) open.value = false
+}
+watch(() => route.fullPath, closeMobileDrawer)
 
 const isDark = useDark()
 
@@ -130,6 +139,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
             if (checked) {
               isDark.value = false
             }
+            closeMobileDrawer()
           },
           onSelect(e: Event) {
             e.preventDefault()
@@ -144,6 +154,7 @@ const userItems = computed<DropdownMenuItem[][]>(() => [
             if (checked) {
               isDark.value = true
             }
+            closeMobileDrawer()
           },
           onSelect(e: Event) {
             e.preventDefault()
