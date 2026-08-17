@@ -50,9 +50,9 @@ function iconClass(card: CardDef): string {
           <div v-if="card.icon" class="shrink-0 rounded-lg p-2" :class="iconClass(card)">
             <UIcon :name="card.icon" class="size-5" />
           </div>
-          <div>
+          <div class="min-w-0">
             <p class="text-dimmed text-sm">{{ card.label }}</p>
-            <p class="text-xl font-semibold">{{ formatValue(stats?.[card.key], card.format) }}</p>
+            <p class="text-xl font-semibold break-words">{{ formatValue(stats?.[card.key], card.format) }}</p>
           </div>
         </div>
       </UCard>

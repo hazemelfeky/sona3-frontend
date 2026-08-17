@@ -72,9 +72,9 @@ const colorClasses: Record<string, string> = {
             <div class="shrink-0 rounded-lg p-2" :class="colorClasses[card.color]">
               <UIcon :name="card.icon" class="size-5" />
             </div>
-            <div>
+            <div class="min-w-0">
               <p class="text-dimmed text-sm">{{ card.label }}</p>
-              <p class="text-xl font-semibold">{{ formatValue(card.value, card.format) }}</p>
+              <p class="text-xl font-semibold break-words">{{ formatValue(card.value, card.format) }}</p>
             </div>
           </div>
         </UCard>
@@ -86,9 +86,9 @@ const colorClasses: Record<string, string> = {
             <div class="bg-info/10 text-info shrink-0 rounded-lg p-2">
               <UIcon :name="balanceCard.icon" class="size-5" />
             </div>
-            <div>
+            <div class="min-w-0">
               <p class="text-dimmed text-sm">{{ balanceCard.label }}</p>
-              <p class="text-xl font-semibold">{{ formatMoney(balanceCard.value) }}</p>
+              <p class="text-xl font-semibold break-words">{{ formatMoney(balanceCard.value) }}</p>
             </div>
           </div>
         </UCard>

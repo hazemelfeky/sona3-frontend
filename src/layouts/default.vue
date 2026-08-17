@@ -214,7 +214,7 @@ defineShortcuts(extractShortcuts(teamsItems.value))
           :key="state"
           :items="getItems(state)"
           orientation="vertical"
-          :ui="{ link: 'p-1.5 overflow-hidden' }"
+          :ui="{ link: 'p-1.5 overflow-hidden max-lg:min-h-11' }"
         />
       </template>
 
@@ -240,7 +240,7 @@ defineShortcuts(extractShortcuts(teamsItems.value))
       </template>
     </USidebar>
 
-    <div class="flex-1 flex flex-col">
+    <div class="min-w-0 flex-1 flex flex-col">
       <div class="lg:hidden h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
         <UButton
           label="Sona3"
