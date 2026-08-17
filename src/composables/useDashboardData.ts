@@ -43,6 +43,8 @@ export function useDashboardData(config: DashboardConfig) {
           const { from, to } = value as { from?: string; to?: string }
           if (from) query = query.gte(filter.key, from)
           if (to) query = query.lte(filter.key, to)
+        } else if (filter.type === 'contains') {
+          query = query.ilike(filter.key, `%${value}%`)
         } else {
           query = query.eq(filter.key, value)
         }

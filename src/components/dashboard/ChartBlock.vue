@@ -16,8 +16,13 @@ import { formatMoney, formatNumber } from '@/utils/format'
 use([CanvasRenderer, BarChart, LineChart, PieChart, GridComponent, TooltipComponent, LegendComponent])
 
 const props = defineProps<{ chart: ChartDef }>()
+const emit = defineEmits<{ filterClick: [key: string, value: string] }>()
 
 const { rows, loading, error } = useChartData(props.chart.source)
+
+function onChartClick(params: { name: string }) {
+  if (props.chart.filterKey) emit('filterClick', props.chart.filterKey, params.name)
+}
 
 function formatAxisValue(v: number): string {
   return props.chart.format === 'money' ? formatMoney(v) : formatNumber(v)
@@ -87,8 +92,8 @@ const option = computed(() => {
     <p v-else-if="rows.length === 0" class="text-dimmed py-10 text-center text-sm">
       لا توجد بيانات لعرضها في هذا الرسم البياني
     </p>
-    <div v-else class="h-64 w-full">
-      <VChart :option="option" autoresize style="height: 100%; width: 100%" />
+    <div v-else class="h-64 w-full" :class="chart.filterKey ? 'cursor-pointer' : ''">
+      <VChart :option="option" autoresize style="height: 100%; width: 100%" @click="onChartClick" />
     </div>
   </UCard>
 </template>

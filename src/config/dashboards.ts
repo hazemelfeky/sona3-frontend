@@ -22,7 +22,10 @@ export interface ColumnDef {
 export interface FilterDef {
   key: string
   label: string
-  type: 'select' | 'boolean' | 'dateRange'
+  // 'contains' has no input control of its own in FilterBar — it's set by
+  // clicking a chart (see ChartDef.filterKey) and shown as a dismissible
+  // chip, matched with ilike rather than an exact eq().
+  type: 'select' | 'boolean' | 'dateRange' | 'contains'
   options?: { label: string; value: unknown }[] // if omitted, derive distinct values from data
 }
 
@@ -41,6 +44,9 @@ export interface ChartDef {
   format?: 'money' | 'number'
   grouped?: boolean // true when the view has a `series` column
   span?: 1 | 2 // grid width
+  // Clicking a slice/bar sets filters[filterKey] to the clicked label —
+  // must match a key in this dashboard's `filters`.
+  filterKey?: string
 }
 
 export const dashboards: Record<string, DashboardConfig> = {
@@ -53,6 +59,7 @@ export const dashboards: Record<string, DashboardConfig> = {
     filters: [
       { key: 'area', label: 'المنطقة', type: 'select' },
       { key: 'evaluation_status', label: 'الحالة', type: 'select' },
+      { key: 'needs_labels', label: 'الاحتياج', type: 'contains' },
     ],
     columns: [
       { key: 'head_name', label: 'رب الأسرة' },
@@ -79,8 +86,20 @@ export const dashboards: Record<string, DashboardConfig> = {
       ],
     },
     charts: [
-      { type: 'bar', title: 'الاحتياجات الأكثر تكراراً', source: 'v_chart_needs_distribution', span: 2 },
-      { type: 'pie', title: 'الأسر حسب المنطقة', source: 'v_chart_families_by_area', span: 1 },
+      {
+        type: 'bar',
+        title: 'الاحتياجات الأكثر تكراراً',
+        source: 'v_chart_needs_distribution',
+        span: 2,
+        filterKey: 'needs_labels',
+      },
+      {
+        type: 'pie',
+        title: 'الأسر حسب المنطقة',
+        source: 'v_chart_families_by_area',
+        span: 1,
+        filterKey: 'area',
+      },
     ],
   },
 }

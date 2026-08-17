@@ -100,6 +100,19 @@ const booleanOptions = [
           "
         />
       </div>
+
+      <!-- 'contains' filters have no input of their own — set by clicking a
+           chart, surfaced here only as a removable chip. -->
+      <UBadge v-else-if="filter.type === 'contains' && values[filter.key]" color="primary" variant="subtle" class="gap-1">
+        {{ filter.label }}: {{ values[filter.key] }}
+        <UButton
+          icon="i-lucide-x"
+          size="xs"
+          variant="link"
+          color="neutral"
+          @click="updateValue(filter.key, null)"
+        />
+      </UBadge>
     </template>
 
     <UButton

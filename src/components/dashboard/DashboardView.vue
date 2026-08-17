@@ -79,7 +79,12 @@ defineExpose({ refresh })
       />
 
       <UPageGrid v-if="config.charts?.length" class="gap-4 sm:grid-cols-2">
-        <ChartBlock v-for="chart in config.charts" :key="chart.title" :chart="chart" />
+        <ChartBlock
+          v-for="chart in config.charts"
+          :key="chart.title"
+          :chart="chart"
+          @filter-click="(key, value) => (filterValues = { ...filterValues, [key]: value })"
+        />
       </UPageGrid>
     </template>
   </div>
