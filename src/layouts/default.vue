@@ -193,6 +193,7 @@ defineShortcuts(extractShortcuts(teamsItems.value))
       v-model:open="open"
       collapsible="icon"
       side="right"
+      class="print:hidden"
       :ui="{
         container: 'h-full',
         inner: 'bg-elevated/25 divide-transparent',
@@ -252,7 +253,7 @@ defineShortcuts(extractShortcuts(teamsItems.value))
     </USidebar>
 
     <div class="min-w-0 flex-1 flex flex-col">
-      <div class="lg:hidden h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default">
+      <div class="lg:hidden h-(--ui-header-height) shrink-0 flex items-center px-4 border-b border-default print:hidden">
         <UButton
           label="Sona3"
           variant="ghost"
@@ -270,7 +271,7 @@ defineShortcuts(extractShortcuts(teamsItems.value))
         </UButton>
       </div>
 
-      <div class="flex-1 p-4">
+      <div class="flex-1 p-4 print:p-0">
         <router-view />
       </div>
     </div>

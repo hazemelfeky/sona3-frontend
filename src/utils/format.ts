@@ -7,6 +7,8 @@ const moneyFormatter = new Intl.NumberFormat('ar-EG', {
 const numberFormatter = new Intl.NumberFormat('ar-EG', { numberingSystem: 'latn' })
 // en-CA formats as YYYY-MM-DD natively.
 const dateFormatter = new Intl.DateTimeFormat('en-CA', { numberingSystem: 'latn' })
+// en-GB formats as DD/MM/YYYY natively.
+const dateFormatterDMY = new Intl.DateTimeFormat('en-GB', { numberingSystem: 'latn' })
 
 const EXPENSE_CATEGORY_LABELS: Record<string, string> = {
   electricity: 'كهرباء',
@@ -37,6 +39,12 @@ export function formatDate(value: unknown): string {
   if (value === null || value === undefined || value === '') return '—'
   const d = new Date(value as string)
   return Number.isNaN(d.getTime()) ? '—' : dateFormatter.format(d)
+}
+
+export function formatDateDMY(value: unknown): string {
+  if (value === null || value === undefined || value === '') return '—'
+  const d = new Date(value as string)
+  return Number.isNaN(d.getTime()) ? '—' : dateFormatterDMY.format(d)
 }
 
 export function formatBool(value: unknown): string {

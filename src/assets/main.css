@@ -121,3 +121,146 @@
 body {
   background-color: var(--ui-bg);
 }
+
+@media print {
+  @page {
+    size: A4;
+    margin: 1.5cm;
+  }
+
+  html, body {
+    background: #fff !important;
+  }
+
+  /* Belt-and-suspenders: hide every element in the app (nav, icons,
+     buttons, teleported overlays) except the print sheet itself, so
+     nothing from the app chrome can leak onto the printed page
+     regardless of where it's mounted in the DOM. */
+  body * {
+    visibility: hidden;
+  }
+
+  .print-sheet, .print-sheet * {
+    visibility: visible;
+  }
+
+  .print-sheet {
+    position: absolute;
+    inset: 0;
+  }
+
+  .print-sheet {
+    color: #000;
+    background: #fff;
+    font-size: 11pt;
+    line-height: 1.45;
+  }
+
+  .print-sheet, .print-sheet * {
+    color: #000 !important;
+    background: #fff !important;
+    box-shadow: none !important;
+  }
+
+  .print-sheet h1 {
+    font-size: 16pt;
+    margin: 0 0 0.2em;
+  }
+
+  .print-sheet h2 {
+    font-size: 14pt;
+    margin: 0 0 0.4em;
+    border-bottom: 1px solid #000;
+    padding-bottom: 0.2em;
+  }
+
+  .print-sheet .print-section {
+    page-break-inside: avoid;
+    margin-bottom: 1em;
+  }
+
+  .print-sheet .print-header {
+    text-align: center;
+    margin-bottom: 1.2em;
+  }
+
+  .print-sheet .print-org {
+    font-size: 12pt;
+    font-weight: 600;
+  }
+
+  .print-sheet .print-subhead {
+    font-weight: 600;
+    margin: 0.5em 0 0.3em;
+  }
+
+  .print-sheet img {
+    max-width: 100%;
+  }
+
+  .print-sheet .print-logo {
+    max-height: 60px;
+    margin: 0 auto 0.4em;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-sheet .print-header-meta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.3em 1em;
+    font-size: 10pt;
+    word-break: break-word;
+  }
+
+  .print-sheet .print-fields {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4em 1.5em;
+  }
+
+  .print-sheet .print-fields > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5em;
+    border-bottom: 1px dotted #000;
+    padding-bottom: 0.15em;
+    word-break: break-word;
+  }
+
+  .print-sheet .print-fields dt {
+    font-weight: 600;
+  }
+
+  .print-sheet table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .print-sheet thead {
+    display: table-header-group;
+  }
+
+  .print-sheet tr {
+    page-break-inside: avoid;
+  }
+
+  .print-sheet th, .print-sheet td {
+    border: 1px solid #000;
+    padding: 0.3em 0.5em;
+    text-align: right;
+    word-break: break-word;
+  }
+
+  .print-sheet .print-footer {
+    margin-top: 2em;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10pt;
+  }
+
+  .print-sheet .print-signature {
+    min-width: 40%;
+  }
+}

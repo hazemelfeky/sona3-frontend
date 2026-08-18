@@ -9,7 +9,9 @@ import { useRoute, useRouter } from 'vue-router'
 import { useStore } from '@/store'
 import { useFamilyDetail } from '@/composables/useFamilyDetail'
 import FamilyDetail from '@/features/families/components/FamilyDetail.vue'
+import FamilyPrintSheet from '@/features/families/components/FamilyPrintSheet.vue'
 import DeleteFamilyModal from '@/components/DeleteFamilyModal.vue'
+import { formatDateDMY } from '@/utils/format'
 
 const route = useRoute()
 const router = useRouter()
@@ -25,10 +27,26 @@ const deleteModalOpen = ref(false)
 function onFamilyDeleted() {
   router.push('/families')
 }
+
+function printFamily() {
+  const namePart = (family.value?.head_name ?? 'أسرة').trim().replace(/[\\/:*?"<>|]/g, '-')
+  const datePart = formatDateDMY(new Date()).replace(/\//g, '-')
+  const originalTitle = document.title
+
+  document.title = `${namePart} ${datePart}`
+  window.addEventListener(
+    'afterprint',
+    () => {
+      document.title = originalTitle
+    },
+    { once: true },
+  )
+  window.print()
+}
 </script>
 
 <template>
-  <div class="space-y-4">
+  <div class="space-y-4 print:hidden">
     <div class="flex flex-wrap items-center justify-between gap-2">
       <UButton
         to="/families"
@@ -39,6 +57,13 @@ function onFamilyDeleted() {
       />
 
       <div v-if="family" class="flex gap-2">
+        <UButton
+          variant="soft"
+          color="neutral"
+          icon="i-lucide-printer"
+          label="طباعة"
+          @click="printFamily"
+        />
         <UButton
           v-if="store.hasPerm('families.edit')"
           :to="`/families/${familyId}/edit`"
@@ -85,4 +110,14 @@ function onFamilyDeleted() {
       @deleted="onFamilyDeleted"
     />
   </div>
+
+  <FamilyPrintSheet
+    v-if="family"
+    class="hidden print:block"
+    :family="family"
+    :members="members"
+    :income="income"
+    :expenses="expenses"
+    :needs="needs"
+  />
 </template>
