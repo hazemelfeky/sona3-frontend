@@ -5,7 +5,7 @@ export const familiesListConfig: DashboardConfig = {
   source: 'v_families_list',
   requiresPerm: 'families.view',
   defaultSort: { key: 'head_name', dir: 'asc' },
-  search: ['head_name', 'area', 'needs_raw', 'family_code'],
+  search: ['search_text'],
   filters: [
     { key: 'area', label: 'المنطقة', type: 'select' },
     { key: 'evaluation_status', label: 'الحالة', type: 'select' },

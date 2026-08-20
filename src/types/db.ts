@@ -160,6 +160,7 @@ export interface Database {
           needs_labels: string | null
           needs_count: number
           inferred_count: number
+          search_text: string | null
         }
       }
       v_families_stats: {
