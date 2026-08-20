@@ -101,8 +101,22 @@ const booleanOptions = [
         />
       </div>
 
-      <!-- 'contains' filters have no input of their own — set by clicking a
-           chart, surfaced here only as a removable chip. -->
+      <!-- 'contains' filters normally have no input of their own — set by
+           clicking a chart, surfaced here only as a removable chip. When a
+           filter supplies explicit `options`, though, it gets a real select
+           (still matched with ilike, not eq — e.g. the sheet-builder page's
+           needs filter, one label out of a labels string). -->
+      <USelectMenu
+        v-if="filter.type === 'contains' && filter.options"
+        :model-value="values[filter.key]"
+        :items="optionsFor(filter)"
+        value-key="value"
+        label-key="label"
+        :placeholder="filter.label"
+        class="w-40"
+        @update:model-value="(v: unknown) => updateValue(filter.key, v)"
+      />
+
       <UBadge v-else-if="filter.type === 'contains' && values[filter.key]" color="primary" variant="subtle" class="gap-1">
         {{ filter.label }}: {{ values[filter.key] }}
         <UButton

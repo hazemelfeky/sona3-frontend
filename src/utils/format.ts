@@ -9,6 +9,13 @@ const numberFormatter = new Intl.NumberFormat('ar-EG', { numberingSystem: 'latn'
 const dateFormatter = new Intl.DateTimeFormat('en-CA', { numberingSystem: 'latn' })
 // en-GB formats as DD/MM/YYYY natively.
 const dateFormatterDMY = new Intl.DateTimeFormat('en-GB', { numberingSystem: 'latn' })
+// ar-EG localizes the ص/م day period; numberingSystem: 'latn' keeps digits Western.
+const timeFormatterAr = new Intl.DateTimeFormat('ar-EG', {
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+  numberingSystem: 'latn',
+})
 
 const EXPENSE_CATEGORY_LABELS: Record<string, string> = {
   electricity: 'كهرباء',
@@ -45,6 +52,22 @@ export function formatDateDMY(value: unknown): string {
   if (value === null || value === undefined || value === '') return '—'
   const d = new Date(value as string)
   return Number.isNaN(d.getTime()) ? '—' : dateFormatterDMY.format(d)
+}
+
+// "اليوم، 3:10 م" / "من أمس، 3:10 م" / "12/08/2026، 3:10 م" — for surfacing
+// a saved timestamp so the user knows what they're restoring before they click.
+export function formatRelativeArabic(value: unknown): string {
+  if (value === null || value === undefined || value === '') return '—'
+  const d = new Date(value as string)
+  if (Number.isNaN(d.getTime())) return '—'
+
+  const startOfDay = (dt: Date) => new Date(dt.getFullYear(), dt.getMonth(), dt.getDate()).getTime()
+  const dayDiff = Math.round((startOfDay(new Date()) - startOfDay(d)) / 86_400_000)
+
+  const time = timeFormatterAr.format(d)
+  if (dayDiff === 0) return `اليوم، ${time}`
+  if (dayDiff === 1) return `من أمس، ${time}`
+  return `${formatDateDMY(d)}، ${time}`
 }
 
 export function formatBool(value: unknown): string {

@@ -94,6 +94,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '//families/sheet-builder': RouteRecordInfo<
+      '//families/sheet-builder',
+      '/families/sheet-builder',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '//permissions/': RouteRecordInfo<
       '//permissions/',
       '/permissions',
@@ -202,6 +209,14 @@ declare module 'vue-router/auto-routes' {
     'src/features/families/pages/new.vue': {
       routes:
         | '//families/new'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/families/pages/sheet-builder.vue': {
+      routes:
+        | '//families/sheet-builder'
       views:
         | never
       pathParamNames:

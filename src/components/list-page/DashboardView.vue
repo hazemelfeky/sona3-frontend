@@ -12,6 +12,7 @@ import ChartBlock from './ChartBlock.vue'
 const props = defineProps<{
   config: DashboardConfig
   rowActions?: (row: Record<string, unknown>) => DropdownMenuItem[]
+  rowButton?: (row: Record<string, unknown>) => { label: string; icon: string; to: string; target?: string } | null
   selectable?: boolean
   rowKey?: string
   selectedIds?: Set<unknown>
@@ -78,6 +79,7 @@ defineExpose({ refresh, fetchMatchingIds })
         :total="total"
         :page-size="pageSize"
         :row-actions="rowActions"
+        :row-button="rowButton"
         :selectable="selectable"
         :row-key="rowKey"
         :selected-ids="selectedIds"

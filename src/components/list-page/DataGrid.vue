@@ -15,6 +15,11 @@ const props = defineProps<{
   // column entirely when not supplied (a generic dashboard with no
   // domain-specific actions shouldn't grow an empty trailing column).
   rowActions?: (row: Record<string, unknown>) => DropdownMenuItem[]
+  // A single per-row action rendered as a plain button (not a dropdown) —
+  // for a single obvious action like "open this row", where a menu would
+  // just be an extra click. Separate column from rowActions; a row can
+  // have both.
+  rowButton?: (row: Record<string, unknown>) => { label: string; icon: string; to: string; target?: string } | null
   // Opt-in row-selection checkboxes. rowKey names the column holding each
   // row's unique id (e.g. 'family_id'); selectedIds is owned by the parent.
   selectable?: boolean
@@ -32,6 +37,7 @@ const tableColumns = computed<TableColumn<Record<string, unknown>>[]>(() => {
   const cols: TableColumn<Record<string, unknown>>[] = []
   if (props.selectable) cols.push({ id: 'select', header: '' })
   cols.push(...props.columns.map((col) => ({ accessorKey: col.key, header: col.label })))
+  if (props.rowButton) cols.push({ id: 'row-button', header: '' })
   if (props.rowActions) cols.push({ id: 'actions', header: '' })
   return cols
 })
@@ -105,6 +111,12 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
             {{ formatValue(row.getValue(col.key), col.format) }}
           </UBadge>
           <span v-else>{{ formatValue(row.getValue(col.key), col.format) }}</span>
+        </template>
+
+        <template v-if="rowButton" #row-button-cell="{ row }">
+          <div class="flex justify-end" @click.stop>
+            <UButton v-if="rowButton(row.original)" v-bind="rowButton(row.original)!" variant="ghost" color="neutral" size="sm" />
+          </div>
         </template>
 
         <template v-if="rowActions" #actions-cell="{ row }">

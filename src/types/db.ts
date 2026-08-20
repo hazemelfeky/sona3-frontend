@@ -146,6 +146,29 @@ export interface Database {
         Insert: Partial<Database['public']['Tables']['permission_templates']['Row']>
         Update: Partial<Database['public']['Tables']['permission_templates']['Row']>
       }
+      family_groups: {
+        Row: {
+          group_id: string
+          name: string
+          created_by: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['family_groups']['Row']> & { name: string; created_by: string }
+        Update: Partial<Database['public']['Tables']['family_groups']['Row']>
+      }
+      family_group_members: {
+        Row: {
+          group_id: string
+          family_id: number
+          added_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['family_group_members']['Row']> & {
+          group_id: string
+          family_id: number
+        }
+        Update: Partial<Database['public']['Tables']['family_group_members']['Row']>
+      }
     }
     Views: {
       v_families_list: {

@@ -39,3 +39,35 @@ export async function fetchBulkPrintFamilies(familyIds: number[]): Promise<BulkP
     }
   })
 }
+
+export interface ExecutionSheetFamily {
+  area: string
+  headName: string
+  headPhone: string
+  spouseName: string
+  memberCount: number | null
+}
+
+// شيت تنفيذ — a plain CSV export, no member lookup needed (unlike the
+// printed sheets above, which need each family's head member for a
+// national id column this one doesn't have).
+export async function fetchExecutionSheetFamilies(familyIds: number[]): Promise<ExecutionSheetFamily[]> {
+  if (familyIds.length === 0) return []
+
+  const { data, error } = await supabase
+    .from('families')
+    .select('area, head_name, head_phone, spouse_name, member_count')
+    .in('family_id', familyIds)
+  if (error) throw error
+
+  return (data ?? []).map((f) => {
+    const phone = f.head_phone ? normalizeEgyptPhone(f.head_phone) : ''
+    return {
+      area: f.area ?? '',
+      headName: f.head_name ?? '',
+      headPhone: phone === '—' ? '' : phone,
+      spouseName: f.spouse_name ?? '',
+      memberCount: f.member_count,
+    }
+  })
+}
