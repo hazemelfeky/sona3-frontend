@@ -4,6 +4,7 @@ import type { TableColumn } from '@nuxt/ui'
 import type { Database } from '@/types/db'
 import type { FamilyNeed } from '@/composables/useFamilyDetail'
 import { formatValue, formatExpenseCategory } from '@/utils/format'
+import { findHeadMember } from '@/features/families/utils/findHeadMember'
 
 type Family = Database['public']['Tables']['families']['Row']
 type Member = Database['public']['Tables']['members']['Row']
@@ -26,6 +27,8 @@ function copyRowId() {
   if (props.family.row_id == null) return
   navigator.clipboard.writeText(String(props.family.row_id))
 }
+
+const headMember = computed(() => findHeadMember(props.family, props.members))
 
 const hasSpouseData = computed(() =>
   anyDefined(
@@ -143,6 +146,10 @@ const expenseColumns: TableColumn<Expense>[] = [
           <div v-if="family.head_phone">
             <dt class="text-dimmed">الهاتف</dt>
             <dd>{{ family.head_phone }}</dd>
+          </div>
+          <div v-if="headMember?.id_number">
+            <dt class="text-dimmed">الرقم القومي</dt>
+            <dd>{{ headMember.id_number }}</dd>
           </div>
           <div v-if="family.head_occupation">
             <dt class="text-dimmed">المهنة</dt>

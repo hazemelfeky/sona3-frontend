@@ -52,6 +52,15 @@ export function formatBool(value: unknown): string {
   return value ? 'نعم' : 'لا'
 }
 
+// Egyptian mobiles are stored as 11 digits starting with 0 (e.g. 01012345678).
+// Some source rows are missing the leading zero — add it back.
+export function normalizeEgyptPhone(value: unknown): string {
+  if (value === null || value === undefined || value === '') return '—'
+  const digits = String(value).replace(/\D/g, '')
+  if (digits.length === 10 && digits.startsWith('1')) return `0${digits}`
+  return digits || '—'
+}
+
 export function formatExpenseCategory(value: unknown): string {
   if (value === null || value === undefined || value === '') return '—'
   return EXPENSE_CATEGORY_LABELS[String(value)] ?? String(value)

@@ -123,7 +123,12 @@ body {
 }
 
 @media print {
-  @page {
+  /* Named page so this doesn't collide with MonthlySheet.vue's own plain
+     `@page` rule (kept unnamed, exactly as specified, in that component's
+     own <style> block) — both stylesheets are loaded in the same SPA
+     session, and two unnamed @page rules would fight over which margin
+     wins regardless of which route is currently open. */
+  @page family-sheet {
     size: A4;
     margin: 1.5cm;
   }
@@ -140,16 +145,18 @@ body {
     visibility: hidden;
   }
 
-  .print-sheet, .print-sheet * {
+  .print-sheet, .print-sheet *,
+  .sheet, .sheet * {
     visibility: visible;
   }
 
-  .print-sheet {
+  .print-sheet, .sheet {
     position: absolute;
     inset: 0;
   }
 
   .print-sheet {
+    page: family-sheet;
     color: #000;
     background: #fff;
     font-size: 11pt;

@@ -23,37 +23,44 @@ export function useDashboardData(config: DashboardConfig) {
     page.value = 1
   }, { deep: true })
 
+  // Shared between the paginated fetch and the "all rows matching the
+  // current filters" lookup used for cross-page selection, so the two never
+  // drift apart on what counts as "matching".
+  function applyFilters<T extends { eq: any; ilike: any; gte: any; lte: any; or: any }>(query: T): T {
+    if (config.fixedFilter) {
+      for (const [key, value] of Object.entries(config.fixedFilter)) {
+        query = query.eq(key, value)
+      }
+    }
+
+    for (const filter of config.filters ?? []) {
+      const value = filterValues.value[filter.key]
+      if (value === null || value === undefined || value === '') continue
+
+      if (filter.type === 'dateRange') {
+        const { from, to } = value as { from?: string; to?: string }
+        if (from) query = query.gte(filter.key, from)
+        if (to) query = query.lte(filter.key, to)
+      } else if (filter.type === 'contains') {
+        query = query.ilike(filter.key, `%${value}%`)
+      } else {
+        query = query.eq(filter.key, value)
+      }
+    }
+
+    if (debouncedSearch.value && config.search?.length) {
+      const orExpr = config.search.map((col) => `${col}.ilike.%${debouncedSearch.value}%`).join(',')
+      query = query.or(orExpr)
+    }
+
+    return query
+  }
+
   async function fetchRows() {
     loading.value = true
     error.value = null
     try {
-      let query = db.from(config.source).select('*', { count: 'exact' })
-
-      if (config.fixedFilter) {
-        for (const [key, value] of Object.entries(config.fixedFilter)) {
-          query = query.eq(key, value)
-        }
-      }
-
-      for (const filter of config.filters ?? []) {
-        const value = filterValues.value[filter.key]
-        if (value === null || value === undefined || value === '') continue
-
-        if (filter.type === 'dateRange') {
-          const { from, to } = value as { from?: string; to?: string }
-          if (from) query = query.gte(filter.key, from)
-          if (to) query = query.lte(filter.key, to)
-        } else if (filter.type === 'contains') {
-          query = query.ilike(filter.key, `%${value}%`)
-        } else {
-          query = query.eq(filter.key, value)
-        }
-      }
-
-      if (debouncedSearch.value && config.search?.length) {
-        const orExpr = config.search.map((col) => `${col}.ilike.%${debouncedSearch.value}%`).join(',')
-        query = query.or(orExpr)
-      }
+      let query = applyFilters(db.from(config.source).select('*', { count: 'exact' }))
 
       if (sortKey.value) {
         query = query.order(sortKey.value, { ascending: sortDir.value === 'asc' })
@@ -77,6 +84,15 @@ export function useDashboardData(config: DashboardConfig) {
     }
   }
 
+  // All ids matching the current filters — not just the current page.
+  // Powers "select all" for cross-page bulk actions.
+  async function fetchMatchingIds(idKey: string): Promise<unknown[]> {
+    const query = applyFilters(db.from(config.source).select(idKey))
+    const { data, error: err } = await query
+    if (err) throw err
+    return ((data as unknown as Record<string, unknown>[]) ?? []).map((row) => row[idKey])
+  }
+
   watch(
     [page, pageSize, filterValues, debouncedSearch, sortKey, sortDir],
     fetchRows,
@@ -95,5 +111,6 @@ export function useDashboardData(config: DashboardConfig) {
     search,
     filterValues,
     refresh: fetchRows,
+    fetchMatchingIds,
   }
 }

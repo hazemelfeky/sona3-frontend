@@ -3,6 +3,7 @@ import { computed } from 'vue'
 import type { Database } from '@/types/db'
 import type { FamilyNeed } from '@/composables/useFamilyDetail'
 import { formatValue, formatDateDMY, formatExpenseCategory } from '@/utils/format'
+import { findHeadMember } from '@/features/families/utils/findHeadMember'
 
 type Family = Database['public']['Tables']['families']['Row']
 type Member = Database['public']['Tables']['members']['Row']
@@ -22,6 +23,8 @@ function anyDefined(...values: unknown[]): boolean {
 }
 
 const activeNeeds = computed(() => props.needs.filter((n) => !(n.status ?? '').includes('مرفوض')))
+
+const headMember = computed(() => findHeadMember(props.family, props.members))
 
 const paidExpenses = computed(() => props.expenses.filter((ex) => ex.amount !== null && ex.amount > 0))
 
@@ -86,6 +89,7 @@ const hasNotesData = computed(() =>
       <dl class="print-fields">
         <div v-if="anyDefined(props.family.head_age)"><dt>العمر</dt><dd>{{ formatValue(props.family.head_age, 'number') }}</dd></div>
         <div v-if="props.family.head_phone"><dt>الهاتف</dt><dd>{{ props.family.head_phone }}</dd></div>
+        <div v-if="headMember?.id_number"><dt>الرقم القومي</dt><dd>{{ headMember.id_number }}</dd></div>
         <div v-if="props.family.head_occupation"><dt>المهنة</dt><dd>{{ props.family.head_occupation }}</dd></div>
         <div v-if="props.family.head_education"><dt>التعليم</dt><dd>{{ props.family.head_education }}</dd></div>
         <div v-if="props.family.head_status"><dt>الحالة</dt><dd>{{ props.family.head_status }}</dd></div>

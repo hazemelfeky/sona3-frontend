@@ -52,6 +52,7 @@ export interface Database {
           name: string | null
           age: number | null
           relation: string | null
+          id_number: string | null
           is_working: boolean | null
           education_level: string | null
           education_monthly_cost: number | null

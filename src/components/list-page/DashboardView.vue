@@ -12,8 +12,11 @@ import ChartBlock from './ChartBlock.vue'
 const props = defineProps<{
   config: DashboardConfig
   rowActions?: (row: Record<string, unknown>) => DropdownMenuItem[]
+  selectable?: boolean
+  rowKey?: string
+  selectedIds?: Set<unknown>
 }>()
-const emit = defineEmits<{ rowClick: [row: Record<string, unknown>] }>()
+const emit = defineEmits<{ rowClick: [row: Record<string, unknown>]; toggleRow: [id: unknown] }>()
 
 const store = useStore()
 
@@ -23,12 +26,12 @@ const store = useStore()
 // "no data yet".
 const forbidden = computed(() => Boolean(props.config.requiresPerm) && !store.hasPerm(props.config.requiresPerm!))
 
-const { rows, total, loading, error, page, pageSize, sortKey, sortDir, search, filterValues, refresh } =
+const { rows, total, loading, error, page, pageSize, sortKey, sortDir, search, filterValues, refresh, fetchMatchingIds } =
   useDashboardData(props.config)
 
 const statsResult = props.config.stats ? useDashboardStats(props.config.stats.source) : null
 
-defineExpose({ refresh })
+defineExpose({ refresh, fetchMatchingIds })
 </script>
 
 <template>
@@ -75,7 +78,11 @@ defineExpose({ refresh })
         :total="total"
         :page-size="pageSize"
         :row-actions="rowActions"
+        :selectable="selectable"
+        :row-key="rowKey"
+        :selected-ids="selectedIds"
         @row-click="(row) => emit('rowClick', row)"
+        @toggle-row="(id) => emit('toggleRow', id)"
       />
 
       <UPageGrid v-if="config.charts?.length" class="gap-4 sm:grid-cols-2">

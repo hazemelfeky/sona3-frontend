@@ -15,19 +15,23 @@ const props = defineProps<{
   // column entirely when not supplied (a generic dashboard with no
   // domain-specific actions shouldn't grow an empty trailing column).
   rowActions?: (row: Record<string, unknown>) => DropdownMenuItem[]
+  // Opt-in row-selection checkboxes. rowKey names the column holding each
+  // row's unique id (e.g. 'family_id'); selectedIds is owned by the parent.
+  selectable?: boolean
+  rowKey?: string
+  selectedIds?: Set<unknown>
 }>()
 
 const page = defineModel<number>('page', { required: true })
 const sortKey = defineModel<string>('sortKey', { required: true })
 const sortDir = defineModel<'asc' | 'desc'>('sortDir', { required: true })
 
-const emit = defineEmits<{ rowClick: [row: Record<string, unknown>] }>()
+const emit = defineEmits<{ rowClick: [row: Record<string, unknown>]; toggleRow: [id: unknown] }>()
 
 const tableColumns = computed<TableColumn<Record<string, unknown>>[]>(() => {
-  const cols: TableColumn<Record<string, unknown>>[] = props.columns.map((col) => ({
-    accessorKey: col.key,
-    header: col.label,
-  }))
+  const cols: TableColumn<Record<string, unknown>>[] = []
+  if (props.selectable) cols.push({ id: 'select', header: '' })
+  cols.push(...props.columns.map((col) => ({ accessorKey: col.key, header: col.label })))
   if (props.rowActions) cols.push({ id: 'actions', header: '' })
   return cols
 })
@@ -70,6 +74,16 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
         :ui="{ tr: 'cursor-pointer' }"
         @select="(_e: Event, row: { original: Record<string, unknown> }) => emit('rowClick', row.original)"
       >
+        <template v-if="selectable" #select-cell="{ row }">
+          <div @click.stop>
+            <UCheckbox
+              :model-value="selectedIds?.has(row.original[rowKey!]) ?? false"
+              aria-label="تحديد الأسرة"
+              @update:model-value="emit('toggleRow', row.original[rowKey!])"
+            />
+          </div>
+        </template>
+
         <template v-for="col in columns" :key="`h-${col.key}`" #[`${col.key}-header`]>
           <button
             type="button"
