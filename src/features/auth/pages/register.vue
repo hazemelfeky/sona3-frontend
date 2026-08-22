@@ -78,7 +78,13 @@ async function onSubmit() {
 
     <form class="space-y-4 p-2" @submit.prevent="onSubmit">
       <UFormField label="اسم المستخدم">
-        <UInput v-model="username" class="w-full" placeholder="ahmed_test" autocomplete="username" />
+        <UInput
+          v-model="username"
+          class="w-full"
+          placeholder="ahmed_test"
+          autocomplete="username"
+          :disabled="submitting"
+        />
         <p v-if="usernameHint" class="text-xs mt-1" :class="usernameHint.class">{{ usernameHint.text }}</p>
       </UFormField>
       <p class="text-xs text-dimmed -mt-2">
@@ -86,23 +92,29 @@ async function onSubmit() {
       </p>
 
       <UFormField label="الاسم بالكامل">
-        <UInput v-model="fullName" class="w-full" />
+        <UInput v-model="fullName" class="w-full" :disabled="submitting" />
       </UFormField>
 
       <UFormField label="كلمة المرور">
-        <UInput v-model="password" type="password" class="w-full" autocomplete="new-password" />
+        <UInput
+          v-model="password"
+          type="password"
+          class="w-full"
+          autocomplete="new-password"
+          :disabled="submitting"
+        />
       </UFormField>
 
       <UFormField label="رقم الموبايل (اختياري)">
-        <UInput v-model="phone" class="w-full" autocomplete="tel" />
+        <UInput v-model="phone" class="w-full" autocomplete="tel" :disabled="submitting" />
       </UFormField>
 
       <UFormField label="الإيميل (اختياري)">
-        <UInput v-model="email" type="email" class="w-full" autocomplete="email" />
+        <UInput v-model="email" type="email" class="w-full" autocomplete="email" :disabled="submitting" />
       </UFormField>
 
       <UFormField label="المنطقة (اختياري)">
-        <UInput v-model="area" class="w-full" />
+        <UInput v-model="area" class="w-full" :disabled="submitting" />
       </UFormField>
 
       <UAlert
