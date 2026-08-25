@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from 'vue'
 import { supabase, db } from '@/lib/supabase'
 import { compressImage } from '@/utils/compressImage'
+import { getAvatarSignedUrl } from '@/utils/avatar'
 import type { Database } from '@/types/db'
 
 // `auth_email` is deliberately excluded — it's the throwaway placeholder
@@ -32,11 +33,7 @@ export function useProfile(userId: Ref<string>) {
   const error = ref<string | null>(null)
 
   async function loadAvatarUrl(path: string | null) {
-    avatarUrl.value = null
-    if (!path) return
-    // Signed URL, not cached — it expires in 1h, generated fresh per page load.
-    const { data } = await supabase.storage.from('avatars').createSignedUrl(path, 3600)
-    avatarUrl.value = data?.signedUrl ?? null
+    avatarUrl.value = await getAvatarSignedUrl(path)
   }
 
   async function load() {

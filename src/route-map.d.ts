@@ -129,6 +129,20 @@ declare module 'vue-router/auto-routes' {
       { userId: ParamValue<false> },
       | never
     >,
+    '//volunteers/': RouteRecordInfo<
+      '//volunteers/',
+      '/volunteers',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '//volunteers/[id]': RouteRecordInfo<
+      '//volunteers/[id]',
+      '/volunteers/:id',
+      { id: ParamValue<true> },
+      { id: ParamValue<false> },
+      | never
+    >,
   }
 
   /**
@@ -253,6 +267,22 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'userId'
+    }
+    'src/features/volunteers/pages/index.vue': {
+      routes:
+        | '//volunteers/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/volunteers/pages/[id].vue': {
+      routes:
+        | '//volunteers/[id]'
+      views:
+        | never
+      pathParamNames:
+        | 'id'
     }
   }
 

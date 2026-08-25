@@ -22,7 +22,7 @@ export const nav: NavEntry[] = [
   {
     label: 'المتطوعون',
     icon: 'i-lucide-users',
-    disabled: true,
+    to: '/volunteers',
     requiresPerm: 'users.view',
   },
   {

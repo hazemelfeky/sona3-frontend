@@ -39,7 +39,9 @@ declare module 'vue' {
     USeparator: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Separator.vue')['default']
     USidebar: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Sidebar.vue')['default']
     USkeleton: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Skeleton.vue')['default']
+    USwitch: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Switch.vue')['default']
     UTable: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Table.vue')['default']
+    UTabs: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Tabs.vue')['default']
     UTextarea: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Textarea.vue')['default']
     UTooltip: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_052b07b0f60b43cb2fd4f7b714e0c30c/node_modules/@nuxt/ui/dist/runtime/components/Tooltip.vue')['default']
   }

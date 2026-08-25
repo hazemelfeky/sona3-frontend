@@ -169,6 +169,48 @@ export interface Database {
         }
         Update: Partial<Database['public']['Tables']['family_group_members']['Row']>
       }
+      volunteer_assessments: {
+        Row: {
+          assessment_id: number
+          user_id: string
+          commitment: number | null
+          attendance: number | null
+          quality: number | null
+          communication: number | null
+          teamwork: number | null
+          initiative: number | null
+          strengths: string | null
+          development: string | null
+          ready_for_more: boolean | null
+          next_step: string | null
+          assessed_by: string | null
+          created_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['volunteer_assessments']['Row']> & {
+          user_id: string
+          commitment: number
+          attendance: number
+          quality: number
+          communication: number
+          teamwork: number
+          initiative: number
+        }
+        Update: Partial<Database['public']['Tables']['volunteer_assessments']['Row']>
+      }
+      volunteer_notes: {
+        Row: {
+          note_id: number
+          user_id: string
+          body: string
+          author_id: string | null
+          created_at: string
+        }
+        Insert: Partial<Database['public']['Tables']['volunteer_notes']['Row']> & {
+          user_id: string
+          body: string
+        }
+        Update: Partial<Database['public']['Tables']['volunteer_notes']['Row']>
+      }
     }
     Views: {
       v_families_list: {
@@ -215,6 +257,30 @@ export interface Database {
           area: string | null
           status: 'pending' | 'approved' | 'rejected'
           perms: string[]
+        }
+      }
+      v_volunteers: {
+        Row: {
+          user_id: string
+          username: string
+          full_name: string | null
+          phone: string | null
+          area: string | null
+          status: 'pending' | 'approved' | 'rejected'
+          volunteer_state: string | null
+          team: string | null
+          avatar_path: string | null
+          created_at: string | null
+          age: number | null
+          search_text: string | null
+        }
+      }
+      v_user_directory: {
+        Row: {
+          user_id: string
+          username: string | null
+          full_name: string | null
+          avatar_path: string | null
         }
       }
     }
