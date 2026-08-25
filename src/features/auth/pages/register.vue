@@ -7,7 +7,10 @@ meta:
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
-import { useUsernameAvailability } from '@/features/auth/composables/useUsernameAvailability'
+import {
+  useUsernameAvailability,
+  describeUsernameErrors,
+} from '@/features/auth/composables/useUsernameAvailability'
 
 const router = useRouter()
 const store = useStore()
@@ -25,14 +28,22 @@ const errorMessage = ref('')
 const { status: usernameStatus, onInput: checkUsername } = useUsernameAvailability()
 watch(username, (value) => checkUsername(value.trim()))
 
+const usernameErrors = computed(() =>
+  usernameStatus.value === 'invalid' ? describeUsernameErrors(username.value) : [],
+)
+
 const usernameHint = computed(() => {
   switch (usernameStatus.value) {
     case 'available':
       return { text: '✅ متاح', class: 'text-success' }
     case 'taken':
-      return { text: '❌ مستخدم', class: 'text-error' }
+      return { text: '❌ الاسم ده متاخد قبل كده — جرّب اسم تاني', class: 'text-error' }
     case 'invalid':
-      return { text: '⚠️ الشكل غلط', class: 'text-warning' }
+      // An empty reason list means the format is fine and the availability
+      // check itself failed — `useUsernameAvailability` maps both to 'invalid'.
+      return usernameErrors.value.length > 0
+        ? null
+        : { text: '⚠️ مقدرناش نتأكد من الاسم دلوقتي — حاول تاني', class: 'text-warning' }
     case 'checking':
       return { text: 'بيتحقق...', class: 'text-dimmed' }
     default:
@@ -86,6 +97,12 @@ async function onSubmit() {
           :disabled="submitting"
         />
         <p v-if="usernameHint" class="text-xs mt-1" :class="usernameHint.class">{{ usernameHint.text }}</p>
+        <ul v-if="usernameErrors.length" class="text-xs mt-1 space-y-0.5 text-warning">
+          <li v-for="reason in usernameErrors" :key="reason" class="flex items-start gap-1.5">
+            <span aria-hidden="true">⚠️</span>
+            <span>{{ reason }}</span>
+          </li>
+        </ul>
       </UFormField>
       <p class="text-xs text-dimmed -mt-2">
         ده اللي هتسجّل بيه الدخول. تقدر كمان تدخل برقم موبايلك أو إيميلك لو كتبتهم.
