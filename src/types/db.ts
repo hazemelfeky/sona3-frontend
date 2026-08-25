@@ -44,6 +44,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['families']['Row']>
         Update: Partial<Database['public']['Tables']['families']['Row']>
+        Relationships: []
       }
       members: {
         Row: {
@@ -60,6 +61,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['members']['Row']>
         Update: Partial<Database['public']['Tables']['members']['Row']>
+        Relationships: []
       }
       income_sources: {
         Row: {
@@ -71,6 +73,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['income_sources']['Row']>
         Update: Partial<Database['public']['Tables']['income_sources']['Row']>
+        Relationships: []
       }
       expenses: {
         Row: {
@@ -82,6 +85,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['expenses']['Row']>
         Update: Partial<Database['public']['Tables']['expenses']['Row']>
+        Relationships: []
       }
       need_types: {
         Row: {
@@ -91,6 +95,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['need_types']['Row']>
         Update: Partial<Database['public']['Tables']['need_types']['Row']>
+        Relationships: []
       }
       family_needs: {
         Row: {
@@ -103,6 +108,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['family_needs']['Row']>
         Update: Partial<Database['public']['Tables']['family_needs']['Row']>
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -126,6 +132,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['profiles']['Row']> & { user_id: string }
         Update: Partial<Database['public']['Tables']['profiles']['Row']>
+        Relationships: []
       }
       permissions: {
         Row: {
@@ -137,6 +144,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['permissions']['Row']> & { code: string }
         Update: Partial<Database['public']['Tables']['permissions']['Row']>
+        Relationships: []
       }
       permission_templates: {
         Row: {
@@ -145,6 +153,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['permission_templates']['Row']>
         Update: Partial<Database['public']['Tables']['permission_templates']['Row']>
+        Relationships: []
       }
       family_groups: {
         Row: {
@@ -156,6 +165,7 @@ export interface Database {
         }
         Insert: Partial<Database['public']['Tables']['family_groups']['Row']> & { name: string; created_by: string }
         Update: Partial<Database['public']['Tables']['family_groups']['Row']>
+        Relationships: []
       }
       family_group_members: {
         Row: {
@@ -168,6 +178,7 @@ export interface Database {
           family_id: number
         }
         Update: Partial<Database['public']['Tables']['family_group_members']['Row']>
+        Relationships: []
       }
       volunteer_assessments: {
         Row: {
@@ -196,6 +207,7 @@ export interface Database {
           initiative: number
         }
         Update: Partial<Database['public']['Tables']['volunteer_assessments']['Row']>
+        Relationships: []
       }
       volunteer_notes: {
         Row: {
@@ -210,6 +222,7 @@ export interface Database {
           body: string
         }
         Update: Partial<Database['public']['Tables']['volunteer_notes']['Row']>
+        Relationships: []
       }
     }
     Views: {
@@ -227,6 +240,7 @@ export interface Database {
           inferred_count: number
           search_text: string | null
         }
+        Relationships: []
       }
       v_families_stats: {
         Row: {
@@ -236,18 +250,21 @@ export interface Database {
           areas_count: number
           families_with_needs: number
         }
+        Relationships: []
       }
       v_chart_families_by_area: {
         Row: {
           label: string
           value: number
         }
+        Relationships: []
       }
       v_chart_needs_distribution: {
         Row: {
           label: string
           value: number
         }
+        Relationships: []
       }
       v_users_with_perms: {
         Row: {
@@ -258,6 +275,7 @@ export interface Database {
           status: 'pending' | 'approved' | 'rejected'
           perms: string[]
         }
+        Relationships: []
       }
       v_volunteers: {
         Row: {
@@ -274,6 +292,7 @@ export interface Database {
           age: number | null
           search_text: string | null
         }
+        Relationships: []
       }
       v_user_directory: {
         Row: {
@@ -282,7 +301,11 @@ export interface Database {
           full_name: string | null
           avatar_path: string | null
         }
+        Relationships: []
       }
     }
+    Functions: Record<string, never>
+    Enums: Record<string, never>
+    CompositeTypes: Record<string, never>
   }
 }
