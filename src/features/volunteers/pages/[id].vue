@@ -161,7 +161,15 @@ async function onSubmitNote() {
           <UAvatar :src="avatarUrl ?? undefined" :alt="volunteer.full_name ?? volunteer.username" size="xl" />
           <div class="min-w-0 flex-1">
             <h1 class="text-lg font-bold">{{ volunteer.full_name || volunteer.username }}</h1>
-            <p class="text-sm text-dimmed">@{{ volunteer.username }} · {{ normalizeEgyptPhone(volunteer.phone) }} · {{ volunteer.area || '—' }}</p>
+            <!-- Each segment is its own flex item + <bdi> so the LTR username/phone
+                 don't get reordered into the RTL run around them. -->
+            <div class="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5 text-sm text-dimmed">
+              <bdi dir="ltr" class="truncate">@{{ volunteer.username }}</bdi>
+              <span aria-hidden="true">·</span>
+              <bdi dir="ltr">{{ normalizeEgyptPhone(volunteer.phone) }}</bdi>
+              <span aria-hidden="true">·</span>
+              <span class="truncate">{{ volunteer.area || '—' }}</span>
+            </div>
             <div class="flex flex-wrap gap-2 mt-2">
               <UBadge :color="statusColor(volunteer.status)" variant="subtle">{{ statusLabel(volunteer.status) }}</UBadge>
               <UBadge color="neutral" variant="subtle">{{ stateLabel(volunteer.volunteer_state) }}</UBadge>
@@ -187,7 +195,7 @@ async function onSubmitNote() {
 
       <ReviewActions v-if="store.hasPerm('users.review')" :user-id="volunteer.user_id" :status="volunteer.status" @reviewed="reload" />
 
-      <UTabs :items="tabItems" class="w-full">
+      <UTabs :items="tabItems" default-value="data" class="w-full">
         <template #data>
           <UCard>
             <div class="grid sm:grid-cols-2 gap-4 p-2">
