@@ -26,6 +26,17 @@ export const nav: NavEntry[] = [
     requiresPerm: 'users.view',
   },
   {
+    label: 'تايم شيت',
+    icon: 'i-lucide-clock',
+    to: '/timesheet',
+  },
+  {
+    label: 'تايم شيت الكل',
+    icon: 'i-lucide-calendar-clock',
+    to: '/timesheet/all',
+    requiresPerm: 'timesheet.view_all',
+  },
+  {
     label: 'الشؤون المالية',
     icon: 'i-lucide-wallet',
     disabled: true,

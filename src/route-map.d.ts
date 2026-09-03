@@ -129,6 +129,20 @@ declare module 'vue-router/auto-routes' {
       { userId: ParamValue<false> },
       | never
     >,
+    '//timesheet/': RouteRecordInfo<
+      '//timesheet/',
+      '/timesheet',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
+    '//timesheet/all': RouteRecordInfo<
+      '//timesheet/all',
+      '/timesheet/all',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '//volunteers/': RouteRecordInfo<
       '//volunteers/',
       '/volunteers',
@@ -267,6 +281,22 @@ declare module 'vue-router/auto-routes' {
         | never
       pathParamNames:
         | 'userId'
+    }
+    'src/features/timesheet/pages/index.vue': {
+      routes:
+        | '//timesheet/'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/timesheet/pages/all.vue': {
+      routes:
+        | '//timesheet/all'
+      views:
+        | never
+      pathParamNames:
+        | never
     }
     'src/features/volunteers/pages/index.vue': {
       routes:

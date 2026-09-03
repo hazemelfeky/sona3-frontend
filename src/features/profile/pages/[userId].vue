@@ -10,6 +10,7 @@ import {
 } from '@/features/profile/composables/useProfile'
 import { usePermissionsCatalog } from '@/features/permissions/composables/usePermissionsCatalog'
 import { USERNAME_PATTERN } from '@/features/auth/composables/useUsernameAvailability'
+import ActivityGrid from '@/features/timesheet/components/ActivityGrid.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -208,139 +209,151 @@ async function onAvatarChange(e: Event) {
       </UCard>
 
       <!-- Editable (self) / read-only (viewing someone else) details. -->
-      <form v-if="isSelf" class="space-y-4" @submit.prevent="onSave">
+      <div class="space-y-4">
         <UCard>
           <template #header>
-            <h2 class="font-semibold">بيانات تسجيل الدخول</h2>
+            <h2 class="font-semibold">النشاط</h2>
           </template>
-
-          <UAlert
-            color="warning"
-            variant="subtle"
-            icon="i-lucide-info"
-            title="دي بيانات تسجيل الدخول"
-            description="لو غيّرت أي حاجة منها هتدخل بالجديد بعد كده."
-            class="mb-4"
-          />
-
-          <div class="grid sm:grid-cols-2 gap-4 p-2">
-            <UFormField label="اسم المستخدم">
-              <UInput
-                v-model="form.username"
-                icon="i-lucide-at-sign"
-                class="w-full"
-                autocomplete="username"
-              />
-            </UFormField>
-
-            <UFormField label="رقم الموبايل">
-              <UInput
-                v-model="form.phone"
-                icon="i-lucide-phone"
-                class="w-full"
-                autocomplete="tel"
-              />
-            </UFormField>
-
-            <UFormField label="الإيميل" class="sm:col-span-2">
-              <UInput
-                v-model="form.email"
-                type="email"
-                icon="i-lucide-mail"
-                class="w-full"
-                autocomplete="email"
-              />
-            </UFormField>
-          </div>
+          <ActivityGrid :user-id="profile.user_id" />
         </UCard>
 
-        <UCard>
+        <form v-if="isSelf" class="space-y-4" @submit.prevent="onSave">
+          <UCard>
+            <template #header>
+              <h2 class="font-semibold">بيانات تسجيل الدخول</h2>
+            </template>
+
+            <UAlert
+              color="warning"
+              variant="subtle"
+              icon="i-lucide-info"
+              title="دي بيانات تسجيل الدخول"
+              description="لو غيّرت أي حاجة منها هتدخل بالجديد بعد كده."
+              class="mb-4"
+            />
+
+            <div class="grid sm:grid-cols-2 gap-4 p-2">
+              <UFormField label="اسم المستخدم">
+                <UInput
+                  v-model="form.username"
+                  icon="i-lucide-at-sign"
+                  class="w-full"
+                  autocomplete="username"
+                />
+              </UFormField>
+
+              <UFormField label="رقم الموبايل">
+                <UInput
+                  v-model="form.phone"
+                  icon="i-lucide-phone"
+                  class="w-full"
+                  autocomplete="tel"
+                />
+              </UFormField>
+
+              <UFormField label="الإيميل" class="sm:col-span-2">
+                <UInput
+                  v-model="form.email"
+                  type="email"
+                  icon="i-lucide-mail"
+                  class="w-full"
+                  autocomplete="email"
+                />
+              </UFormField>
+            </div>
+          </UCard>
+
+          <UCard>
+            <template #header>
+              <h2 class="font-semibold">البيانات الشخصية</h2>
+            </template>
+
+            <div class="grid sm:grid-cols-2 gap-4 p-2">
+              <UFormField label="الاسم بالكامل" class="sm:col-span-2">
+                <UInput v-model="form.full_name" icon="i-lucide-user" class="w-full" />
+              </UFormField>
+
+              <UFormField label="المنطقة">
+                <UInput v-model="form.area" icon="i-lucide-map-pin" class="w-full" />
+              </UFormField>
+
+              <UFormField label="تاريخ الميلاد">
+                <UInput
+                  v-model="form.birth_date"
+                  type="date"
+                  icon="i-lucide-calendar"
+                  class="w-full"
+                />
+              </UFormField>
+
+              <UFormField label="المؤهل الدراسي">
+                <UInput v-model="form.education" icon="i-lucide-graduation-cap" class="w-full" />
+              </UFormField>
+
+              <UFormField label="الوظيفة">
+                <UInput v-model="form.job" icon="i-lucide-briefcase" class="w-full" />
+              </UFormField>
+            </div>
+          </UCard>
+
+          <UAlert
+            v-if="saveError"
+            color="error"
+            variant="subtle"
+            :title="saveError"
+            icon="i-lucide-alert-circle"
+          />
+          <UAlert
+            v-if="saveSuccess"
+            color="success"
+            variant="subtle"
+            title="اتحفظ بنجاح"
+            icon="i-lucide-check-circle"
+          />
+
+          <div class="flex justify-end">
+            <UButton type="submit" size="lg" :loading="saving" :disabled="!canSave">
+              حفظ التعديلات
+            </UButton>
+          </div>
+        </form>
+
+        <UCard v-else>
           <template #header>
             <h2 class="font-semibold">البيانات الشخصية</h2>
           </template>
 
           <div class="grid sm:grid-cols-2 gap-4 p-2">
-            <UFormField label="الاسم بالكامل" class="sm:col-span-2">
-              <UInput v-model="form.full_name" icon="i-lucide-user" class="w-full" />
-            </UFormField>
-
-            <UFormField label="المنطقة">
-              <UInput v-model="form.area" icon="i-lucide-map-pin" class="w-full" />
-            </UFormField>
-
-            <UFormField label="تاريخ الميلاد">
-              <UInput
-                v-model="form.birth_date"
-                type="date"
-                icon="i-lucide-calendar"
-                class="w-full"
-              />
-            </UFormField>
-
-            <UFormField label="المؤهل الدراسي">
-              <UInput v-model="form.education" icon="i-lucide-graduation-cap" class="w-full" />
-            </UFormField>
-
-            <UFormField label="الوظيفة">
-              <UInput v-model="form.job" icon="i-lucide-briefcase" class="w-full" />
-            </UFormField>
+            <div v-if="profile.area" class="flex items-start gap-2">
+              <UIcon name="i-lucide-map-pin" class="text-dimmed size-4 mt-0.5 shrink-0" />
+              <div>
+                <p class="text-xs text-dimmed">المنطقة</p>
+                <p>{{ profile.area }}</p>
+              </div>
+            </div>
+            <div v-if="profile.education" class="flex items-start gap-2">
+              <UIcon name="i-lucide-graduation-cap" class="text-dimmed size-4 mt-0.5 shrink-0" />
+              <div>
+                <p class="text-xs text-dimmed">المؤهل الدراسي</p>
+                <p>{{ profile.education }}</p>
+              </div>
+            </div>
+            <div v-if="profile.job" class="flex items-start gap-2">
+              <UIcon name="i-lucide-briefcase" class="text-dimmed size-4 mt-0.5 shrink-0" />
+              <div>
+                <p class="text-xs text-dimmed">الوظيفة</p>
+                <p>{{ profile.job }}</p>
+              </div>
+            </div>
+            <p
+              v-if="!profile.area && !profile.education && !profile.job"
+              class="text-dimmed text-sm"
+            >
+              لا توجد بيانات إضافية
+            </p>
           </div>
         </UCard>
-
-        <UAlert
-          v-if="saveError"
-          color="error"
-          variant="subtle"
-          :title="saveError"
-          icon="i-lucide-alert-circle"
-        />
-        <UAlert
-          v-if="saveSuccess"
-          color="success"
-          variant="subtle"
-          title="اتحفظ بنجاح"
-          icon="i-lucide-check-circle"
-        />
-
-        <div class="flex justify-end">
-          <UButton type="submit" size="lg" :loading="saving" :disabled="!canSave">
-            حفظ التعديلات
-          </UButton>
-        </div>
-      </form>
-
-      <UCard v-else>
-        <template #header>
-          <h2 class="font-semibold">البيانات الشخصية</h2>
-        </template>
-
-        <div class="grid sm:grid-cols-2 gap-4 p-2">
-          <div v-if="profile.area" class="flex items-start gap-2">
-            <UIcon name="i-lucide-map-pin" class="text-dimmed size-4 mt-0.5 shrink-0" />
-            <div>
-              <p class="text-xs text-dimmed">المنطقة</p>
-              <p>{{ profile.area }}</p>
-            </div>
-          </div>
-          <div v-if="profile.education" class="flex items-start gap-2">
-            <UIcon name="i-lucide-graduation-cap" class="text-dimmed size-4 mt-0.5 shrink-0" />
-            <div>
-              <p class="text-xs text-dimmed">المؤهل الدراسي</p>
-              <p>{{ profile.education }}</p>
-            </div>
-          </div>
-          <div v-if="profile.job" class="flex items-start gap-2">
-            <UIcon name="i-lucide-briefcase" class="text-dimmed size-4 mt-0.5 shrink-0" />
-            <div>
-              <p class="text-xs text-dimmed">الوظيفة</p>
-              <p>{{ profile.job }}</p>
-            </div>
-          </div>
-          <p v-if="!profile.area && !profile.education && !profile.job" class="text-dimmed text-sm">
-            لا توجد بيانات إضافية
-          </p>
-        </div>
-      </UCard>
+      </div>
     </div>
   </div>
 </template>
