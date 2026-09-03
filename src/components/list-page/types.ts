@@ -17,6 +17,9 @@ export interface ColumnDef {
   label: string // Arabic header
   format?: 'money' | 'number' | 'date' | 'bool' | 'badge'
   sortable?: boolean // default true
+  // Free-text columns only: clip to one line so a long value can't stretch
+  // the row, with the full text kept in the cell's title tooltip.
+  truncate?: boolean
 }
 
 export interface FilterDef {

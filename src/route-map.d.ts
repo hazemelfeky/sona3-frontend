@@ -87,6 +87,13 @@ declare module 'vue-router/auto-routes' {
       { id: ParamValue<false> },
       | never
     >,
+    '//families/deferred/new': RouteRecordInfo<
+      '//families/deferred/new',
+      '/families/deferred/new',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '//families/new': RouteRecordInfo<
       '//families/new',
       '/families/new',
@@ -229,6 +236,14 @@ declare module 'vue-router/auto-routes' {
     'src/features/families/pages/[id]/edit.vue': {
       routes:
         | '//families/[id]/edit'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/families/pages/deferred/new.vue': {
+      routes:
+        | '//families/deferred/new'
       views:
         | never
       pathParamNames:

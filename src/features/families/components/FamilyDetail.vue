@@ -5,6 +5,7 @@ import type { Database } from '@/types/db'
 import type { FamilyNeed } from '@/composables/useFamilyDetail'
 import { formatValue, formatExpenseCategory } from '@/utils/format'
 import { findHeadMember } from '@/features/families/utils/findHeadMember'
+import FamilyPhotos from '@/features/families/components/FamilyPhotos.vue'
 
 type Family = Database['public']['Tables']['families']['Row']
 type Member = Database['public']['Tables']['members']['Row']
@@ -43,7 +44,11 @@ const hasSpouseData = computed(() =>
 )
 
 const hasHousingData = computed(() =>
-  anyDefined(props.family.housing_type, props.family.housing_condition_notes, props.family.blanket_count),
+  anyDefined(
+    props.family.housing_type,
+    props.family.housing_condition_notes,
+    props.family.blanket_count,
+  ),
 )
 
 const hasTotalsData = computed(() =>
@@ -75,9 +80,12 @@ function needStatusIcon(value: string | null): string {
 
 const confidenceInfo = computed(() => {
   const v = String(props.family.confidence ?? '').toLowerCase()
-  if (v === 'low') return { label: 'ثقة منخفضة', color: 'error' as const, icon: 'i-lucide-alert-triangle' }
-  if (v === 'medium') return { label: 'ثقة متوسطة', color: 'warning' as const, icon: 'i-lucide-info' }
-  if (v === 'high') return { label: 'ثقة عالية', color: 'success' as const, icon: 'i-lucide-check-circle' }
+  if (v === 'low')
+    return { label: 'ثقة منخفضة', color: 'error' as const, icon: 'i-lucide-alert-triangle' }
+  if (v === 'medium')
+    return { label: 'ثقة متوسطة', color: 'warning' as const, icon: 'i-lucide-info' }
+  if (v === 'high')
+    return { label: 'ثقة عالية', color: 'success' as const, icon: 'i-lucide-check-circle' }
   return null
 })
 
@@ -122,14 +130,19 @@ const expenseColumns: TableColumn<Expense>[] = [
         {{ family.area ?? '—' }} · {{ formatValue(family.member_count, 'number') }} أفراد ·
         {{ formatValue(family.registration_date, 'date') }}
       </p>
-      <p v-if="family.source_sheet || family.row_id" class="text-dimmed mt-1 text-xs" title="البيانات فى الشيت">
+      <p
+        v-if="family.source_sheet || family.row_id"
+        class="text-dimmed mt-1 text-xs"
+        title="البيانات فى الشيت"
+      >
         المصدر: {{ family.source_sheet ?? '—' }} ·
         <span
           v-if="family.row_id"
           class="cursor-pointer hover:underline"
           title="نسخ رقم الصف"
           @click="copyRowId"
-        >صف {{ family.row_id }}</span>
+          >صف {{ family.row_id }}</span
+        >
         <span v-else>صف —</span>
       </p>
     </div>
@@ -215,9 +228,13 @@ const expenseColumns: TableColumn<Expense>[] = [
 
     <UCard>
       <template #header><h3 class="font-medium">أفراد الأسرة</h3></template>
-      <p v-if="members.length === 0" class="text-dimmed py-4 text-center text-sm">لا يوجد أفراد مسجلون</p>
+      <p v-if="members.length === 0" class="text-dimmed py-4 text-center text-sm">
+        لا يوجد أفراد مسجلون
+      </p>
       <UTable v-else :data="members" :columns="memberColumns">
-        <template #is_working-cell="{ row }">{{ formatValue(row.getValue('is_working'), 'bool') }}</template>
+        <template #is_working-cell="{ row }">{{
+          formatValue(row.getValue('is_working'), 'bool')
+        }}</template>
         <template #age-cell="{ row }">{{ formatValue(row.getValue('age'), 'number') }}</template>
         <template #education_monthly_cost-cell="{ row }">
           {{ formatValue(row.getValue('education_monthly_cost'), 'money') }}
@@ -227,18 +244,32 @@ const expenseColumns: TableColumn<Expense>[] = [
 
     <UCard>
       <template #header><h3 class="font-medium">مصادر الدخل</h3></template>
-      <p v-if="income.length === 0" class="text-dimmed py-4 text-center text-sm">لا توجد مصادر دخل مسجلة</p>
+      <p v-if="income.length === 0" class="text-dimmed py-4 text-center text-sm">
+        لا توجد مصادر دخل مسجلة
+      </p>
       <UTable v-else :data="income" :columns="incomeColumns">
-        <template #amount-cell="{ row }">{{ formatValue(row.getValue('amount'), 'money') }}</template>
+        <template #amount-cell="{ row }">{{
+          formatValue(row.getValue('amount'), 'money')
+        }}</template>
       </UTable>
     </UCard>
 
     <UCard>
       <template #header><h3 class="font-medium">المصروفات</h3></template>
-      <p v-if="expenses.length === 0" class="text-dimmed py-4 text-center text-sm">لا توجد مصروفات مسجلة</p>
-      <UTable v-else :data="expenses.filter(ex => ex.amount !== null && ex.amount > 0)" :columns="expenseColumns">
-        <template #category-cell="{ row }">{{ formatExpenseCategory(row.getValue('category')) }}</template>
-        <template #amount-cell="{ row }">{{ formatValue(row.getValue('amount'), 'money') }}</template>
+      <p v-if="expenses.length === 0" class="text-dimmed py-4 text-center text-sm">
+        لا توجد مصروفات مسجلة
+      </p>
+      <UTable
+        v-else
+        :data="expenses.filter((ex) => ex.amount !== null && ex.amount > 0)"
+        :columns="expenseColumns"
+      >
+        <template #category-cell="{ row }">{{
+          formatExpenseCategory(row.getValue('category'))
+        }}</template>
+        <template #amount-cell="{ row }">{{
+          formatValue(row.getValue('amount'), 'money')
+        }}</template>
       </UTable>
     </UCard>
 
@@ -269,10 +300,18 @@ const expenseColumns: TableColumn<Expense>[] = [
       <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 py-2 px-4">
         <div>
           <p class="text-dimmed mb-2 text-sm font-medium">الاحتياجات المصنفة</p>
-          <p v-if="needs.length === 0" class="text-dimmed py-4 text-center text-sm">لا توجد احتياجات مسجلة</p>
+          <p v-if="needs.length === 0" class="text-dimmed py-4 text-center text-sm">
+            لا توجد احتياجات مسجلة
+          </p>
           <ul v-else class="space-y-2">
             <li v-for="need in needs" :key="need.need_id" class="flex flex-wrap items-center gap-2">
-              <UTooltip :text="need.source === 'inferred' ? 'احتياج مستنتج بواسطة النموذج، يحتاج مراجعة' : 'احتياج مصرح به من الشيت'">
+              <UTooltip
+                :text="
+                  need.source === 'inferred'
+                    ? 'احتياج مستنتج بواسطة النموذج، يحتاج مراجعة'
+                    : 'احتياج مصرح به من الشيت'
+                "
+              >
                 <UIcon
                   :name="need.source === 'inferred' ? 'i-lucide-sparkles' : 'i-lucide-file-check'"
                   :class="need.source === 'inferred' ? 'text-warning' : 'text-dimmed'"
@@ -302,6 +341,8 @@ const expenseColumns: TableColumn<Expense>[] = [
         </div>
       </div>
     </UCard>
+
+    <FamilyPhotos :family-id="family.family_id" />
 
     <UCard v-if="hasNotesData">
       <template #header><h3 class="font-medium">ملاحظات</h3></template>

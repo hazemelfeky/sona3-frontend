@@ -110,6 +110,13 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
           <UBadge v-if="col.format === 'badge'" :color="badgeColor(row.getValue(col.key))" variant="subtle">
             {{ formatValue(row.getValue(col.key), col.format) }}
           </UBadge>
+          <span
+            v-else-if="col.truncate"
+            class="block max-w-96 truncate"
+            :title="row.getValue(col.key) ? String(row.getValue(col.key)) : undefined"
+          >
+            {{ formatValue(row.getValue(col.key), col.format) }}
+          </span>
           <span v-else>{{ formatValue(row.getValue(col.key), col.format) }}</span>
         </template>
 

@@ -4,11 +4,16 @@ import type { DashboardConfig } from '@/components/list-page/types'
 // being derived from v_families_list like area/evaluation_status are —
 // needs_labels is a concatenated string per family, so distinct values on
 // it would be label *combinations*, not individual needs.
-export function buildSheetBuilderConfig(needsOptions: { label: string; value: string | null }[]): DashboardConfig {
+export function buildSheetBuilderConfig(
+  needsOptions: { label: string; value: string | null }[],
+): DashboardConfig {
   return {
     title: 'بناء شيت',
     source: 'v_families_list',
     requiresPerm: 'families.execute',
+    // An unresearched draft has nothing to distribute against — it must not
+    // reach a sheet.
+    fixedFilter: { record_status: 'active' },
     defaultSort: { key: 'head_name', dir: 'asc' },
     search: ['search_text'],
     filters: [

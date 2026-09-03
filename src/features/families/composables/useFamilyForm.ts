@@ -91,6 +91,10 @@ export interface FamilyFormState {
   spouse_education: string
   spouse_status: string
   spouse_notes: string
+  // Head of family is a widow — the husband is deceased, so the spouse
+  // section is hidden and kept empty. Legacy rows have is_widow NULL; the
+  // form treats that as false without writing it back until a real save.
+  is_widow: boolean
   housing_type: string
   housing_condition_notes: string
   blanket_count: string
@@ -109,6 +113,19 @@ export interface FamilyFormState {
   needStatus: Record<string, NeedStatus>
   otherNeedNote: string
 }
+
+// The spouse fields the form binds. Note the families table also has
+// spouse_national_id, which no form field touches — formToPayload nulls it
+// explicitly for a widow so it can't linger from a previous save.
+export const SPOUSE_FORM_KEYS = [
+  'spouse_name',
+  'spouse_age',
+  'spouse_phone',
+  'spouse_occupation',
+  'spouse_education',
+  'spouse_status',
+  'spouse_notes',
+] as const satisfies readonly (keyof FamilyFormState)[]
 
 export function emptyFamilyForm(): FamilyFormState {
   return {
@@ -129,6 +146,7 @@ export function emptyFamilyForm(): FamilyFormState {
     spouse_education: '',
     spouse_status: '',
     spouse_notes: '',
+    is_widow: false,
     housing_type: '',
     housing_condition_notes: '',
     blanket_count: '',
@@ -174,6 +192,8 @@ export function familyToForm(
     spouse_education: s(row.spouse_education),
     spouse_status: s(row.spouse_status),
     spouse_notes: s(row.spouse_notes),
+    // NULL (legacy, never asked) reads as unchecked.
+    is_widow: (row as { is_widow?: boolean | null }).is_widow === true,
     housing_type: s(row.housing_type),
     housing_condition_notes: s(row.housing_condition_notes),
     blanket_count: n(row.blanket_count),
@@ -197,7 +217,7 @@ export function familyToForm(
 export function formToPayload(form: FamilyFormState): FamilyPayload {
   const s = (v: string) => v.trim() || null
   const n = (v: string) => (v.trim() === '' ? null : Number(v))
-  return {
+  const payload: FamilyPayload = {
     area: s(form.area),
     address: s(form.address),
     registration_date: s(form.registration_date),
@@ -226,4 +246,19 @@ export function formToPayload(form: FamilyFormState): FamilyPayload {
     confidence: s(form.confidence),
     general_notes: s(form.general_notes),
   }
+
+  // is_widow and spouse_national_id aren't in the generated types yet (run
+  // `pnpm gen:types`), so they're set through an untyped view of the same
+  // object rather than as literal keys.
+  const extra = payload as Record<string, unknown>
+  extra.is_widow = form.is_widow
+
+  // Belt and braces: the UI clears and hides these when the box is ticked,
+  // but a widow must never leave spouse data behind on any path.
+  if (form.is_widow) {
+    for (const key of SPOUSE_FORM_KEYS) extra[key] = null
+    extra.spouse_national_id = null
+  }
+
+  return payload
 }

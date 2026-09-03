@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import {
   emptyMemberForm,
   NEED_STATUS_OPTIONS,
   NEED_STATUS_DEFAULT,
+  SPOUSE_FORM_KEYS,
   type FamilyFormState,
 } from '@/features/families/composables/useFamilyForm'
 import { useNeedTypesCatalog } from '@/features/families/composables/useNeedTypesCatalog'
@@ -12,6 +14,47 @@ import FormSection from '@/features/families/components/FormSection.vue'
 const form = defineModel<FamilyFormState>({ required: true })
 
 const { needTypes } = useNeedTypesCatalog()
+
+// Sections are matched by prefix, not by their Arabic title — the title is
+// display copy and shouldn't be load-bearing.
+const HEAD_PREFIX = 'head_'
+const SPOUSE_PREFIX = 'spouse_'
+
+// A widow has no spouse to record, so that section disappears entirely.
+const visibleSections = computed(() =>
+  familyFormSections.filter((section) => !(form.value.is_widow && section.prefix === SPOUSE_PREFIX)),
+)
+
+const hasSpouseData = computed(() =>
+  SPOUSE_FORM_KEYS.some((key) => String(form.value[key] ?? '').trim() !== ''),
+)
+
+function clearSpouseFields() {
+  for (const key of SPOUSE_FORM_KEYS) form.value[key] = ''
+}
+
+// Ticking the box throws away whatever is in the spouse section, so it asks
+// first whenever there's actually something to lose. The box only flips
+// after the answer — cancelling leaves both the tick and the data alone.
+const confirmClearOpen = ref(false)
+
+function onWidowChange(checked: boolean) {
+  if (!checked) {
+    form.value.is_widow = false
+    return
+  }
+  if (hasSpouseData.value) {
+    confirmClearOpen.value = true
+    return
+  }
+  form.value.is_widow = true
+}
+
+function confirmWidow() {
+  clearSpouseFields()
+  form.value.is_widow = true
+  confirmClearOpen.value = false
+}
 
 function addMember() {
   form.value.members.push(emptyMemberForm())
@@ -47,7 +90,7 @@ const sectionGridClass: Record<string, string> = {
 
 <template>
   <div class="space-y-6">
-    <UCard v-for="section in familyFormSections" :key="section.title">
+    <UCard v-for="section in visibleSections" :key="section.title">
       <template #header><h3 class="font-medium">{{ section.title }}</h3></template>
       <div class="grid grid-cols-1 gap-4 p-2" :class="sectionGridClass[section.title]">
         <FormSection
@@ -67,6 +110,17 @@ const sectionGridClass: Record<string, string> = {
             </UFormField>
           </template>
         </FormSection>
+      </div>
+
+      <!-- Sits at the end of the head-of-family card, immediately before the
+           spouse section it controls. -->
+      <div v-if="section.prefix === HEAD_PREFIX" class="px-2 pb-2">
+        <UCheckbox
+          :model-value="form.is_widow"
+          label="أرملة"
+          description="رب الأسرة أرملة — مش هيتسجل بيانات زوج."
+          @update:model-value="(checked: boolean | 'indeterminate') => onWidowChange(checked === true)"
+        />
       </div>
     </UCard>
 
@@ -163,5 +217,22 @@ const sectionGridClass: Record<string, string> = {
         />
       </div>
     </UCard>
+
+    <UModal v-model:open="confirmClearOpen" title="أرملة">
+      <template #body>
+        <p class="text-sm">هيتم مسح بيانات الزوج. تمام؟</p>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            label="إلغاء"
+            variant="ghost"
+            color="neutral"
+            @click="confirmClearOpen = false"
+          />
+          <UButton label="تمام" color="error" @click="confirmWidow" />
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>

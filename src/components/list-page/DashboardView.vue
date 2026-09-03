@@ -12,7 +12,9 @@ import ChartBlock from './ChartBlock.vue'
 const props = defineProps<{
   config: DashboardConfig
   rowActions?: (row: Record<string, unknown>) => DropdownMenuItem[]
-  rowButton?: (row: Record<string, unknown>) => { label: string; icon: string; to: string; target?: string } | null
+  rowButton?: (
+    row: Record<string, unknown>,
+  ) => { label: string; icon: string; to: string; target?: string } | null
   selectable?: boolean
   rowKey?: string
   selectedIds?: Set<unknown>
@@ -25,10 +27,24 @@ const store = useStore()
 // the page — this is defense-in-depth. RLS returns an empty list, not a
 // 403, so without this check a permission problem renders identically to
 // "no data yet".
-const forbidden = computed(() => Boolean(props.config.requiresPerm) && !store.hasPerm(props.config.requiresPerm!))
+const forbidden = computed(
+  () => Boolean(props.config.requiresPerm) && !store.hasPerm(props.config.requiresPerm!),
+)
 
-const { rows, total, loading, error, page, pageSize, sortKey, sortDir, search, filterValues, refresh, fetchMatchingIds } =
-  useDashboardData(props.config)
+const {
+  rows,
+  total,
+  loading,
+  error,
+  page,
+  pageSize,
+  sortKey,
+  sortDir,
+  search,
+  filterValues,
+  refresh,
+  fetchMatchingIds,
+} = useDashboardData(props.config)
 
 const statsResult = props.config.stats ? useDashboardStats(props.config.stats.source) : null
 
@@ -66,7 +82,13 @@ defineExpose({ refresh, fetchMatchingIds })
         v-model:values="filterValues"
         :filters="config.filters"
         :source="config.source"
+        :fixed-filter="config.fixedFilter"
       />
+
+      <!-- Room for a page-level note about what this list is currently
+           scoped to, sitting with the filters it belongs to rather than up
+           beside the title. -->
+      <slot name="afterFilters" />
 
       <DataGrid
         v-model:page="page"

@@ -1,11 +1,16 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import type { FilterDef } from '@/components/list-page/types'
 import { db } from '@/lib/supabase'
 
 const props = defineProps<{
   filters: FilterDef[]
   source: string
+  // The dashboard's always-applied filter, mirrored here so derived options
+  // list only values present in the rows the grid is actually showing —
+  // otherwise e.g. an area that exists only on deferred families would
+  // offer itself as a filter that matches nothing.
+  fixedFilter?: Record<string, unknown>
 }>()
 
 const search = defineModel<string>('search', { required: true })
@@ -19,12 +24,21 @@ async function loadOptions() {
   const keys = props.filters.filter((f) => f.type === 'select' && !f.options).map((f) => f.key)
   if (keys.length === 0) return
 
-  const { data } = await db.from(props.source).select(keys.join(','))
+  let query = db.from(props.source).select(keys.join(','))
+  for (const [key, value] of Object.entries(props.fixedFilter ?? {})) {
+    query = query.eq(key, value)
+  }
+
+  const { data } = await query
   const rows = (data ?? []) as unknown as Record<string, unknown>[]
 
   for (const key of keys) {
     const unique = Array.from(
-      new Set(rows.map((row) => row[key]).filter((v: unknown) => v !== null && v !== undefined && v !== '')),
+      new Set(
+        rows
+          .map((row) => row[key])
+          .filter((v: unknown) => v !== null && v !== undefined && v !== ''),
+      ),
     )
     derivedOptions.value[key] = unique
       .sort((a, b) => String(a).localeCompare(String(b), 'ar'))
@@ -32,7 +46,7 @@ async function loadOptions() {
   }
 }
 
-loadOptions()
+watch(() => props.fixedFilter, loadOptions, { deep: true, immediate: true })
 
 function optionsFor(filter: FilterDef) {
   return filter.options ?? derivedOptions.value[filter.key] ?? []
@@ -56,7 +70,12 @@ const booleanOptions = [
 
 <template>
   <div class="flex flex-wrap items-center gap-3">
-    <UInput v-model="search" icon="i-lucide-search" placeholder="بحث..." class="w-full sm:w-64 bg-neutral" />
+    <UInput
+      v-model="search"
+      icon="i-lucide-search"
+      placeholder="بحث..."
+      class="w-full sm:w-64 bg-neutral"
+    />
 
     <template v-for="filter in filters" :key="filter.key">
       <USelectMenu
@@ -84,7 +103,9 @@ const booleanOptions = [
       <div v-else-if="filter.type === 'dateRange'" class="flex items-center gap-1">
         <UInput
           type="date"
-          :model-value="(values[filter.key] as { from?: string; to?: string } | undefined)?.from ?? ''"
+          :model-value="
+            (values[filter.key] as { from?: string; to?: string } | undefined)?.from ?? ''
+          "
           class="w-36"
           @update:model-value="
             (v: string) => updateValue(filter.key, { ...(values[filter.key] as object), from: v })
@@ -93,7 +114,9 @@ const booleanOptions = [
         <span class="text-dimmed text-sm">{{ filter.label }}</span>
         <UInput
           type="date"
-          :model-value="(values[filter.key] as { from?: string; to?: string } | undefined)?.to ?? ''"
+          :model-value="
+            (values[filter.key] as { from?: string; to?: string } | undefined)?.to ?? ''
+          "
           class="w-36"
           @update:model-value="
             (v: string) => updateValue(filter.key, { ...(values[filter.key] as object), to: v })
@@ -117,7 +140,12 @@ const booleanOptions = [
         @update:model-value="(v: unknown) => updateValue(filter.key, v)"
       />
 
-      <UBadge v-else-if="filter.type === 'contains' && values[filter.key]" color="primary" variant="subtle" class="gap-1">
+      <UBadge
+        v-else-if="filter.type === 'contains' && values[filter.key]"
+        color="primary"
+        variant="subtle"
+        class="gap-1"
+      >
         {{ filter.label }}: {{ values[filter.key] }}
         <UButton
           icon="i-lucide-x"

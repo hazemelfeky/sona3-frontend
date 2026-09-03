@@ -7,7 +7,11 @@ meta:
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { emptyFamilyForm, formToPayload } from '@/features/families/composables/useFamilyForm'
-import { createFamily, saveFamilyMembers, saveFamilyNeeds } from '@/features/families/composables/useFamilyMutations'
+import {
+  createFamily,
+  saveFamilyMembers,
+  saveFamilyNeeds,
+} from '@/features/families/composables/useFamilyMutations'
 import { useNeedTypesCatalog } from '@/features/families/composables/useNeedTypesCatalog'
 import FamilyForm from '@/features/families/components/FamilyForm.vue'
 
@@ -55,9 +59,24 @@ async function onSubmit() {
 
     <h1 class="text-2xl font-semibold">إضافة أسرة</h1>
 
+    <!-- Shortcut to the minimal capture form, deliberately muted: deferred
+         is the exception, not a co-equal action beside "حفظ الأسرة". -->
+    <RouterLink
+      to="/families/deferred/new"
+      class="inline-block text-sm text-dimmed hover:text-default hover:underline"
+    >
+      الأسرة مؤجلة؟ سجّلها ببيانات مبدئية
+    </RouterLink>
+
     <FamilyForm v-model="form" />
 
-    <UAlert v-if="errorMessage" color="error" variant="subtle" :title="errorMessage" icon="i-lucide-alert-circle" />
+    <UAlert
+      v-if="errorMessage"
+      color="error"
+      variant="subtle"
+      :title="errorMessage"
+      icon="i-lucide-alert-circle"
+    />
 
     <div class="flex justify-end gap-2">
       <UButton label="حفظ الأسرة" :loading="saving" :disabled="!canSave" @click="onSubmit" />
