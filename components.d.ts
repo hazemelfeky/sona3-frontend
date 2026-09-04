@@ -31,6 +31,7 @@ declare module 'vue' {
     UFormField: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/components/FormField.vue')['default']
     UIcon: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/vue/components/Icon.vue')['default']
     UInput: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/components/Input.vue')['default']
+    ULink: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/vue/overrides/vue-router/Link.vue')['default']
     UModal: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/components/Modal.vue')['default']
     UNavigationMenu: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/components/NavigationMenu.vue')['default']
     UPageGrid: typeof import('./node_modules/.pnpm/@nuxt+ui@4.9.0_70f4f25ab89488ea5be3f485d9c1e3cc/node_modules/@nuxt/ui/dist/runtime/components/PageGrid.vue')['default']

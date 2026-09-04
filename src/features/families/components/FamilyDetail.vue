@@ -6,6 +6,7 @@ import type { FamilyNeed } from '@/composables/useFamilyDetail'
 import { formatValue, formatExpenseCategory } from '@/utils/format'
 import { findHeadMember } from '@/features/families/utils/findHeadMember'
 import FamilyPhotos from '@/features/families/components/FamilyPhotos.vue'
+import FamilyAidHistory from '@/features/aid/components/FamilyAidHistory.vue'
 
 type Family = Database['public']['Tables']['families']['Row']
 type Member = Database['public']['Tables']['members']['Row']
@@ -343,6 +344,8 @@ const expenseColumns: TableColumn<Expense>[] = [
     </UCard>
 
     <FamilyPhotos :family-id="family.family_id" />
+
+    <FamilyAidHistory :family-id="family.family_id" />
 
     <UCard v-if="hasNotesData">
       <template #header><h3 class="font-medium">ملاحظات</h3></template>

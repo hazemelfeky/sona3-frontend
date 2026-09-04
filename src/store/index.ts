@@ -61,6 +61,15 @@ export const useStore = defineStore('app', () => {
     return permsSet.value.has(code)
   }
 
+  // A route or nav entry may list several permission codes — holding any one
+  // of them is enough. /aid is the case that needs it: it's for the people
+  // who record executions (aid.manage) and the people who only read them
+  // (families.view) alike.
+  function hasAnyPerm(codes: string | string[] | undefined) {
+    if (!codes) return true
+    return (Array.isArray(codes) ? codes : [codes]).some((code) => permsSet.value.has(code))
+  }
+
   async function fetchProfile(id: string) {
     const { data, error } = await supabase
       .from('profiles')
@@ -176,6 +185,7 @@ export const useStore = defineStore('app', () => {
     initialized,
     authLoading,
     hasPerm,
+    hasAnyPerm,
     refreshSession,
     init,
     signUp,

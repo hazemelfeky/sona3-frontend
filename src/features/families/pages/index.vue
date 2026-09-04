@@ -61,6 +61,13 @@ const deleteModalOpen = ref(false)
 
 function familyRowActions(row: Record<string, unknown>): DropdownMenuItem[] {
   const items: DropdownMenuItem[] = []
+  if (store.hasPerm('aid.manage')) {
+    items.push({
+      label: 'تنفيذ',
+      icon: 'i-lucide-hand-heart',
+      onSelect: () => router.push(`/families/${row.family_id}/aid/new`),
+    })
+  }
   if (store.hasPerm('families.edit')) {
     items.push({
       label: 'تعديل',

@@ -33,8 +33,9 @@ router.beforeEach(async (to) => {
   // ever show them empty/rejected results. The permission itself lives on
   // the route definition (`<route>` meta block) — never re-checked ad hoc
   // inside a page component.
-  const routePerm = to.meta.requiresPerm as string | undefined
-  if (routePerm && !store.hasPerm(routePerm)) return '/dashboard'
+  // A list of codes means any one of them is enough, not all of them.
+  const routePerm = to.meta.requiresPerm as string | string[] | undefined
+  if (routePerm && !store.hasAnyPerm(routePerm)) return '/dashboard'
 
   return true
 })

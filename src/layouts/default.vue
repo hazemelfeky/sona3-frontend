@@ -93,7 +93,7 @@ const teamsItems = computed<DropdownMenuItem[][]>(() => {
 
 function getItems(_state: 'collapsed' | 'expanded') {
   return nav
-    .filter((entry) => !entry.requiresPerm || store.hasPerm(entry.requiresPerm))
+    .filter((entry) => store.hasAnyPerm(entry.requiresPerm))
     .map((entry) => ({
       label: entry.label,
       icon: entry.icon,

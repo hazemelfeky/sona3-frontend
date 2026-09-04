@@ -4,7 +4,9 @@ export interface NavEntry {
   to?: string // route path
   disabled?: boolean
   children?: NavEntry[]
-  requiresPerm?: string // hidden unless the current user holds this permission (UX only — DB still enforces)
+  // Hidden unless the current user holds this permission (UX only — DB still
+  // enforces). A list means any one of the codes is enough.
+  requiresPerm?: string | string[]
 }
 
 export const nav: NavEntry[] = [
@@ -35,6 +37,18 @@ export const nav: NavEntry[] = [
     icon: 'i-lucide-calendar-clock',
     to: '/timesheet/all',
     requiresPerm: 'timesheet.view_all',
+  },
+  {
+    label: 'التنفيذات',
+    icon: 'i-lucide-hand-heart',
+    to: '/aid',
+    requiresPerm: ['families.view', 'aid.manage'],
+  },
+  {
+    label: 'المخزون',
+    icon: 'i-lucide-package',
+    to: '/stock',
+    requiresPerm: 'stock.view',
   },
   {
     label: 'الشؤون المالية',
