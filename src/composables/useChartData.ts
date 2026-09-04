@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { db, warnIfEmptyFromRls } from '@/lib/supabase'
+import { toUserMessage } from '@/utils/errors'
 
 export interface ChartRow {
   label: string
@@ -21,7 +22,7 @@ export function useChartData(source: string) {
       rows.value = (data as ChartRow[]) ?? []
       warnIfEmptyFromRls(source, rows.value.length === 0, false)
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حدث خطأ غير متوقع أثناء تحميل الرسم البياني'
+      error.value = toUserMessage(e, 'حدث خطأ غير متوقع أثناء تحميل الرسم البياني')
       rows.value = []
     } finally {
       loading.value = false

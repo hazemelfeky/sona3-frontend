@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from 'vue'
 import { supabase, db } from '@/lib/supabase'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
 
 type NoteRow = Database['public']['Tables']['volunteer_notes']['Row']
 export type NoteWithAuthor = NoteRow & { author_name: string | null }
@@ -39,7 +40,7 @@ export function useVolunteerNotes(userId: Ref<string>) {
 
       rows.value = list.map((r) => ({ ...r, author_name: r.author_id ? (names.get(r.author_id) ?? null) : null }))
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء تحميل الملاحظات'
+      error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل الملاحظات')
       rows.value = []
     } finally {
       loading.value = false

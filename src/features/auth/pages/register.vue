@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
@@ -74,7 +75,7 @@ async function onSubmit() {
     })
     router.push('/auth/pending')
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'حصلت مشكلة. حاول تاني.'
+    errorMessage.value = toUserMessage(error, 'حصلت مشكلة. حاول تاني.')
   } finally {
     submitting.value = false
   }

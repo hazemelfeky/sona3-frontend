@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import {
   fetchDailyActivity,
@@ -44,7 +45,7 @@ async function load() {
   try {
     loaded.value = await fetchDailyActivity(props.userId, since)
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء تحميل النشاط'
+    error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل النشاط')
     loaded.value = []
   } finally {
     loading.value = false

@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from 'vue'
 import { supabase, db } from '@/lib/supabase'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
 
 type AssessmentRow = Database['public']['Tables']['volunteer_assessments']['Row']
 export type AssessmentWithAuthor = AssessmentRow & { author_name: string | null }
@@ -52,7 +53,7 @@ export function useVolunteerAssessments(userId: Ref<string>) {
 
       rows.value = list.map((r) => ({ ...r, author_name: r.assessed_by ? (names.get(r.assessed_by) ?? null) : null }))
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء تحميل التقييمات'
+      error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل التقييمات')
       rows.value = []
     } finally {
       loading.value = false

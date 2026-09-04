@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import { db } from '@/lib/supabase'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
 
 export type MemberRow = Database['public']['Views']['v_users_with_perms']['Row']
 export type StatusFilter = 'all' | 'pending' | 'approved' | 'rejected'
@@ -31,7 +32,7 @@ export function useMembersList() {
       // not-pending and keeps the query's alphabetical order within each.
       rows.value = list.sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending'))
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حدث خطأ غير متوقع أثناء تحميل الأعضاء'
+      error.value = toUserMessage(e, 'حدث خطأ غير متوقع أثناء تحميل الأعضاء')
       rows.value = []
     } finally {
       loading.value = false

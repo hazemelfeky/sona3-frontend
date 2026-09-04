@@ -1,5 +1,6 @@
 import { ref } from 'vue'
 import { db, warnIfEmptyFromRls } from '@/lib/supabase'
+import { toUserMessage } from '@/utils/errors'
 
 export function useDashboardStats(source: string) {
   const stats = ref<Record<string, unknown> | null>(null)
@@ -15,7 +16,7 @@ export function useDashboardStats(source: string) {
       stats.value = data as Record<string, unknown> | null
       warnIfEmptyFromRls(source, stats.value === null, false)
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حدث خطأ غير متوقع أثناء تحميل الإحصائيات'
+      error.value = toUserMessage(e, 'حدث خطأ غير متوقع أثناء تحميل الإحصائيات')
       stats.value = null
     } finally {
       loading.value = false

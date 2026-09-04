@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, watch } from 'vue'
 import {
   fetchFamilyGroups,
@@ -35,7 +36,7 @@ async function refresh() {
   try {
     groups.value = await fetchFamilyGroups()
   } catch (e) {
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     loading.value = false
   }
@@ -49,7 +50,7 @@ async function pickGroup(group: FamilyGroupSummary) {
     open.value = false
     emit('loaded', result)
   } catch (e) {
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     loadingGroupId.value = null
   }
@@ -68,7 +69,7 @@ async function confirmRename() {
     renameTarget.value = null
     await refresh()
   } catch (e) {
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     renaming.value = false
   }
@@ -82,7 +83,7 @@ async function confirmDelete() {
     deleteTarget.value = null
     await refresh()
   } catch (e) {
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     deleting.value = false
   }

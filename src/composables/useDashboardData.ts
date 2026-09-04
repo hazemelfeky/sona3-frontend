@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import { db, warnIfEmptyFromRls } from '@/lib/supabase'
 import type { DashboardConfig } from '@/components/list-page/types'
+import { toUserMessage } from '@/utils/errors'
 
 export function useDashboardData(config: DashboardConfig) {
   const rows = ref<Record<string, unknown>[]>([])
@@ -76,7 +77,7 @@ export function useDashboardData(config: DashboardConfig) {
       total.value = count ?? 0
       warnIfEmptyFromRls(config.source, rows.value.length === 0, false)
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حدث خطأ غير متوقع أثناء تحميل البيانات'
+      error.value = toUserMessage(e, 'حدث خطأ غير متوقع أثناء تحميل البيانات')
       rows.value = []
       total.value = 0
     } finally {

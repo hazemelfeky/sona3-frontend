@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useStore } from '@/store'
@@ -84,7 +85,7 @@ async function onSave() {
     await store.refreshSession(profile.value.user_id)
     saveSuccess.value = true
   } catch (e) {
-    saveError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني.'
+    saveError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني.')
   } finally {
     saving.value = false
   }
@@ -103,7 +104,7 @@ async function onAvatarChange(e: Event) {
     await uploadMyAvatar(profile.value.user_id, file)
     await reload()
   } catch (err) {
-    uploadError.value = err instanceof Error ? err.message : 'حصلت مشكلة في رفع الصورة.'
+    uploadError.value = toUserMessage(err, 'حصلت مشكلة في رفع الصورة.')
   } finally {
     uploading.value = false
     if (fileInput.value) fileInput.value.value = ''

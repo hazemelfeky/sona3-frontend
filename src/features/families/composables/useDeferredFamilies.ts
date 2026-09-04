@@ -1,4 +1,5 @@
 import { db } from '@/lib/supabase'
+import { isOfflineError, OFFLINE_MESSAGE } from '@/utils/errors'
 
 // A deferred family is just a families row parked at record_status 'draft' —
 // basic capture now, full research later, at which point it flips to
@@ -32,6 +33,7 @@ export function emptyDeferredForm(): DeferredFamilyForm {
 }
 
 function translateFamilyError(error: unknown): string {
+  if (isOfflineError(error)) return OFFLINE_MESSAGE
   const raw = error instanceof Error ? error.message : String(error ?? '')
   if (/permission|policy|row-level security|rls/i.test(raw))
     return 'مش معاك صلاحية لتنفيذ الإجراء ده'

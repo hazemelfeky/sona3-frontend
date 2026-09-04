@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
@@ -30,7 +31,7 @@ async function onSubmit() {
     else if (store.status === 'rejected') router.push('/auth/rejected')
     else router.push('/dashboard')
   } catch (error) {
-    errorMessage.value = error instanceof Error ? error.message : 'بيانات الدخول غير صحيحة'
+    errorMessage.value = toUserMessage(error, 'بيانات الدخول غير صحيحة')
   } finally {
     submitting.value = false
   }

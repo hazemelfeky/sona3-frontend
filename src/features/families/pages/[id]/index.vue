@@ -20,7 +20,7 @@ const store = useStore()
 const familyId = computed(() => Number((route.params as Record<string, string>).id))
 const isValidId = computed(() => Number.isInteger(familyId.value) && familyId.value > 0)
 
-const { family, members, income, expenses, needs, loading, error } = useFamilyDetail(familyId)
+const { family, members, income, expenses, needs, loading, error, reload } = useFamilyDetail(familyId)
 
 const deleteModalOpen = ref(false)
 
@@ -94,7 +94,14 @@ function printFamily() {
       <USkeleton class="h-32 w-full" />
     </template>
 
-    <UAlert v-else-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
+    <UAlert
+      v-else-if="error"
+      color="error"
+      variant="subtle"
+      :title="error"
+      icon="i-lucide-alert-circle"
+      :actions="[{ label: 'إعادة المحاولة', color: 'neutral', variant: 'outline', onClick: reload }]"
+    />
 
     <div v-else-if="!family" class="flex flex-col items-center justify-center gap-2 py-24 text-center">
       <UIcon name="i-lucide-user-x" class="text-dimmed size-10" />

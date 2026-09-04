@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useFamilyDetail } from '@/composables/useFamilyDetail'
@@ -71,7 +72,7 @@ async function onSubmit() {
     )
     router.push(`/families/${familyId.value}`)
   } catch (e) {
-    saveError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    saveError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     saving.value = false
   }

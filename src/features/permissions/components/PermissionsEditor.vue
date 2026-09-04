@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { isOfflineError, OFFLINE_MESSAGE } from '@/utils/errors'
+import { toUserMessage } from '@/utils/errors'
 import { ref, watch } from 'vue'
 import { supabase, db } from '@/lib/supabase'
 import { useStore } from '@/store'
@@ -32,7 +34,7 @@ async function load() {
     member.value = data
     checked.value = new Set(data?.perms ?? [])
   } catch (e) {
-    loadError.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء التحميل'
+    loadError.value = toUserMessage(e, 'حصلت مشكلة أثناء التحميل')
   } finally {
     loading.value = false
   }
@@ -54,6 +56,7 @@ const saving = ref(false)
 const actionError = ref('')
 
 function translateActionError(error: unknown): string {
+  if (isOfflineError(error)) return OFFLINE_MESSAGE
   const raw = error instanceof Error ? error.message : String(error ?? '')
   if (raw.includes('NO_PERMISSION')) return 'مش معاك صلاحية للإجراء ده'
   if (raw.includes('LAST_ADMIN_PROTECTED')) return 'ماينفعش تشيل صلاحية منح الصلاحيات من آخر مسؤول'

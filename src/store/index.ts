@@ -2,6 +2,7 @@ import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 import { supabase, db } from '@/lib/supabase'
 import type { Database } from '@/types/db'
+import { isOfflineError, OFFLINE_MESSAGE } from '@/utils/errors'
 
 // Deliberately narrower than the profiles.Row type: `auth_email` is the
 // throwaway placeholder address (see AUTH_EMAIL_DOMAIN below) and must
@@ -31,6 +32,7 @@ export interface SignUpPayload {
 }
 
 function translateSignUpError(error: unknown): string {
+  if (isOfflineError(error)) return OFFLINE_MESSAGE
   const raw = error instanceof Error ? error.message : String(error ?? '')
   const code = (error as { code?: string } | null)?.code ?? raw
   if (code.includes('IDENTIFIER_TAKEN')) return 'في بيانات مستخدمة قبل كده. جرّب اسم أو رقم مختلف.'

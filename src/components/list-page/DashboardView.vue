@@ -105,6 +105,7 @@ defineExpose({ refresh, fetchMatchingIds })
         :selectable="selectable"
         :row-key="rowKey"
         :selected-ids="selectedIds"
+        @retry="refresh"
         @row-click="(row) => emit('rowClick', row)"
         @toggle-row="(id) => emit('toggleRow', id)"
       />

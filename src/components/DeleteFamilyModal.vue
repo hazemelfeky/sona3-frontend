@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, watch } from 'vue'
 import { deleteFamily } from '@/features/families/composables/useFamilyMutations'
 
@@ -30,7 +31,7 @@ async function onConfirm() {
     // Hiding the delete action for users without families.delete is UX
     // only — RLS is the real gate, so a rejected delete still surfaces
     // here rather than failing silently.
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     deleting.value = false
   }

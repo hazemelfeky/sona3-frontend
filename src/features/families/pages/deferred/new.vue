@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useStore } from '@/store'
@@ -34,7 +35,7 @@ async function onSubmit() {
     // Hiding the entry points for users without families.create is UX only
     // — RLS is the real gate, so a rejected insert still surfaces here
     // rather than failing silently.
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     saving.value = false
   }

@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed } from 'vue'
 import { useStore } from '@/store'
 import ActivityGrid from '@/features/timesheet/components/ActivityGrid.vue'
@@ -52,7 +53,7 @@ async function onSubmit() {
     await refresh()
     gridKey.value++
   } catch (e) {
-    formError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني.'
+    formError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني.')
   } finally {
     saving.value = false
   }
@@ -95,7 +96,7 @@ async function onSaveEdit() {
     await refresh()
     gridKey.value++
   } catch (e) {
-    editError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني.'
+    editError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني.')
   } finally {
     editSaving.value = false
   }
@@ -124,7 +125,7 @@ async function onConfirmDelete() {
     await refresh()
     gridKey.value++
   } catch (e) {
-    deleteError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني.'
+    deleteError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني.')
   } finally {
     deleting.value = false
   }
@@ -200,6 +201,7 @@ async function onConfirmDelete() {
         variant="subtle"
         :title="error"
         icon="i-lucide-alert-circle"
+              :actions="[{ label: 'إعادة المحاولة', color: 'neutral', variant: 'outline', onClick: refresh }]"
       />
 
       <template v-else-if="loading">

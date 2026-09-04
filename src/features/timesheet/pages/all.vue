@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch, onMounted } from 'vue'
 import { db, warnIfEmptyFromRls } from '@/lib/supabase'
 import ActivityGrid from '@/features/timesheet/components/ActivityGrid.vue'
@@ -50,7 +51,7 @@ async function load() {
     warnIfEmptyFromRls('profiles', volunteers.value.length === 0, false)
     daily.value = activity
   } catch (e) {
-    error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء تحميل البيانات'
+    error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل البيانات')
     volunteers.value = []
     daily.value = []
   } finally {
@@ -97,6 +98,7 @@ watch(volunteers, async (list) => {
       variant="subtle"
       :title="error"
       icon="i-lucide-alert-circle"
+          :actions="[{ label: 'إعادة المحاولة', color: 'neutral', variant: 'outline', onClick: load }]"
     />
 
     <template v-else-if="loading">

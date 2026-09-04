@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import { onKeyStroke } from '@vueuse/core'
 import { useStore } from '@/store'
@@ -15,7 +16,7 @@ const canView = computed(() => store.hasPerm('families.view'))
 const canManage = computed(() => store.hasPerm('families.create'))
 
 const familyId = computed(() => props.familyId)
-const { photos, loading, error, uploadProgress, upload, remove, saveCaption } =
+const { photos, loading, error, uploadProgress, refresh, upload, remove, saveCaption } =
   useFamilyPhotos(familyId)
 
 /* ---- upload ---- */
@@ -32,7 +33,7 @@ async function onFilesPicked(e: Event) {
     await upload(files, store.userId)
     toast.add({ title: 'تم رفع الصور', color: 'success', icon: 'i-lucide-check-circle' })
   } catch (err) {
-    uploadError.value = err instanceof Error ? err.message : 'حصلت مشكلة. حاول تاني.'
+    uploadError.value = toUserMessage(err, 'حصلت مشكلة. حاول تاني.')
   } finally {
     // Always clear, or picking the same file twice in a row fires no change.
     input.value = ''
@@ -110,7 +111,7 @@ async function onSaveCaption() {
     await saveCaption(current.value, captionDraft.value)
     editingCaption.value = false
   } catch (err) {
-    uploadError.value = err instanceof Error ? err.message : 'حصلت مشكلة. حاول تاني.'
+    uploadError.value = toUserMessage(err, 'حصلت مشكلة. حاول تاني.')
   } finally {
     savingCaption.value = false
   }
@@ -131,7 +132,7 @@ async function onConfirmDelete() {
     confirmingDelete.value = false
     toast.add({ title: 'تم حذف الصورة', color: 'success', icon: 'i-lucide-check-circle' })
   } catch (err) {
-    uploadError.value = err instanceof Error ? err.message : 'حصلت مشكلة. حاول تاني.'
+    uploadError.value = toUserMessage(err, 'حصلت مشكلة. حاول تاني.')
   } finally {
     deleting.value = false
   }
@@ -185,6 +186,7 @@ async function onConfirmDelete() {
       variant="subtle"
       :title="error"
       icon="i-lucide-alert-circle"
+          :actions="[{ label: 'إعادة المحاولة', color: 'neutral', variant: 'outline', onClick: refresh }]"
     />
 
     <div v-else-if="loading" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">

@@ -3,6 +3,8 @@ import { supabase, db } from '@/lib/supabase'
 import { compressImage } from '@/utils/compressImage'
 import { getAvatarSignedUrl } from '@/utils/avatar'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
+import { isOfflineError, OFFLINE_MESSAGE } from '@/utils/errors'
 
 // `auth_email` is deliberately excluded — it's the throwaway placeholder
 // address and must never land in app state, even for an admin viewing
@@ -61,7 +63,7 @@ export function useProfile(userId: Ref<string>) {
       profile.value = data
       await loadAvatarUrl(data.avatar_path)
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حصل خطأ غير متوقع أثناء تحميل البيانات'
+      error.value = toUserMessage(e, 'حصل خطأ غير متوقع أثناء تحميل البيانات')
     } finally {
       loading.value = false
     }
@@ -84,6 +86,7 @@ export interface ProfileUpdatePayload {
 }
 
 function translateProfileError(error: unknown): string {
+  if (isOfflineError(error)) return OFFLINE_MESSAGE
   const raw = error instanceof Error ? error.message : String(error ?? '')
   if (raw.includes('IDENTIFIER_TAKEN')) return 'في بيانات مستخدمة قبل كده. جرّب رقم أو إيميل مختلف.'
   return 'حصلت مشكلة. حاول تاني.'

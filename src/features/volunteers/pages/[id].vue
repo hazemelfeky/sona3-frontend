@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { db } from '@/lib/supabase'
@@ -127,7 +128,7 @@ async function onSubmitAssessment() {
     })
     assessmentForm.value = blankAssessmentForm()
   } catch (e) {
-    assessmentError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني.'
+    assessmentError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني.')
   } finally {
     savingAssessment.value = false
   }
@@ -145,7 +146,7 @@ async function onSubmitNote() {
     await submitNote(noteBody.value.trim())
     noteBody.value = ''
   } catch (e) {
-    noteError.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني.'
+    noteError.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني.')
   } finally {
     savingNote.value = false
   }

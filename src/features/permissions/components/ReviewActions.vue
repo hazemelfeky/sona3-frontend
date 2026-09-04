@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { isOfflineError, OFFLINE_MESSAGE } from '@/utils/errors'
 import { ref } from 'vue'
 import { db } from '@/lib/supabase'
 import { useStore } from '@/store'
@@ -12,6 +13,7 @@ const saving = ref(false)
 const actionError = ref('')
 
 function translateActionError(error: unknown): string {
+  if (isOfflineError(error)) return OFFLINE_MESSAGE
   const raw = error instanceof Error ? error.message : String(error ?? '')
   if (raw.includes('NO_PERMISSION')) return 'مش معاك صلاحية للإجراء ده'
   return 'حصلت مشكلة. حاول تاني.'

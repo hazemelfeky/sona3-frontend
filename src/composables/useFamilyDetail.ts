@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from 'vue'
 import { supabase, warnIfEmptyFromRls } from '@/lib/supabase'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
 
 type Family = Database['public']['Tables']['families']['Row']
 type Member = Database['public']['Tables']['members']['Row']
@@ -58,7 +59,7 @@ export function useFamilyDetail(id: Ref<number>) {
 
       warnIfEmptyFromRls('families', family.value === null, false)
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حدث خطأ غير متوقع أثناء تحميل بيانات الأسرة'
+      error.value = toUserMessage(e, 'حدث خطأ غير متوقع أثناء تحميل بيانات الأسرة')
       family.value = null
     } finally {
       loading.value = false
@@ -67,5 +68,14 @@ export function useFamilyDetail(id: Ref<number>) {
 
   watch(id, load, { immediate: true })
 
-  return { family, members, income, expenses, needs, loading, error }
+  return {
+    family,
+    members,
+    income,
+    expenses,
+    needs,
+    loading,
+    error,
+    reload: () => load(id.value),
+  }
 }

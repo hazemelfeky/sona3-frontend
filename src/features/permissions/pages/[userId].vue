@@ -4,6 +4,7 @@ meta:
 </route>
 
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { supabase } from '@/lib/supabase'
@@ -41,7 +42,7 @@ async function load() {
 
     member.value = data
   } catch (e) {
-    loadError.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء التحميل'
+    loadError.value = toUserMessage(e, 'حصلت مشكلة أثناء التحميل')
   } finally {
     loading.value = false
   }

@@ -2,6 +2,7 @@ import { ref, watch, type Ref } from 'vue'
 import { supabase, db } from '@/lib/supabase'
 import { getAvatarSignedUrl } from '@/utils/avatar'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
 
 export type VolunteerRow = Database['public']['Views']['v_volunteers']['Row']
 type ProfileExtra = Pick<Database['public']['Tables']['profiles']['Row'], 'education' | 'job'>
@@ -44,7 +45,7 @@ export function useVolunteerDetail(userId: Ref<string>) {
         .maybeSingle<ProfileExtra>()
       extra.value = profileData ?? null
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء التحميل'
+      error.value = toUserMessage(e, 'حصلت مشكلة أثناء التحميل')
     } finally {
       loading.value = false
     }

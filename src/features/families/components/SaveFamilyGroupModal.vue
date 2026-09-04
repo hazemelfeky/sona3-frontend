@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { toUserMessage } from '@/utils/errors'
 import { ref, watch } from 'vue'
 import { useStore } from '@/store'
 import { saveFamilyGroup } from '@/features/families/composables/useFamilyGroups'
@@ -31,7 +32,7 @@ async function onSave() {
     open.value = false
     emit('saved')
   } catch (e) {
-    errorMessage.value = e instanceof Error ? e.message : 'حصلت مشكلة. حاول تاني'
+    errorMessage.value = toUserMessage(e, 'حصلت مشكلة. حاول تاني')
   } finally {
     saving.value = false
   }

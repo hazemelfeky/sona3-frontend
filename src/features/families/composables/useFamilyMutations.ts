@@ -7,11 +7,13 @@ import {
   NEED_OTHER_CODE,
   type MemberFormState,
 } from './useFamilyForm'
+import { isOfflineError, OFFLINE_MESSAGE } from '@/utils/errors'
 
 export type FamilyPayload = Database['public']['Tables']['families']['Insert']
 export type MemberPayload = Database['public']['Tables']['members']['Insert']
 
 function translateFamilyError(error: unknown): string {
+  if (isOfflineError(error)) return OFFLINE_MESSAGE
   const raw = error instanceof Error ? error.message : String(error ?? '')
   if (/permission|policy|row-level security|rls/i.test(raw)) return 'مش معاك صلاحية لتنفيذ الإجراء ده'
   return 'حصلت مشكلة. حاول تاني'

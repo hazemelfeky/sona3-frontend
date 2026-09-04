@@ -11,7 +11,7 @@ import { getAvatarSignedUrl } from '@/utils/avatar'
 import { normalizeEgyptPhone } from '@/utils/format'
 
 const router = useRouter()
-const { rows, loading, error, search, statusFilter, stateFilter } = useVolunteersList()
+const { rows, loading, error, search, statusFilter, stateFilter, refresh } = useVolunteersList()
 
 const statusOptions = [
   { label: 'الكل', value: 'all' },
@@ -61,7 +61,14 @@ function openVolunteer(row: VolunteerRow) {
       <USelectMenu v-model="stateFilter" :items="stateOptions" value-key="value" label-key="label" class="w-40" />
     </div>
 
-    <UAlert v-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
+    <UAlert
+      v-if="error"
+      color="error"
+      variant="subtle"
+      :title="error"
+      icon="i-lucide-alert-circle"
+      :actions="[{ label: 'إعادة المحاولة', color: 'neutral', variant: 'outline', onClick: refresh }]"
+    />
 
     <template v-else>
       <template v-if="loading">

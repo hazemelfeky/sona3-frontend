@@ -31,7 +31,11 @@ const page = defineModel<number>('page', { required: true })
 const sortKey = defineModel<string>('sortKey', { required: true })
 const sortDir = defineModel<'asc' | 'desc'>('sortDir', { required: true })
 
-const emit = defineEmits<{ rowClick: [row: Record<string, unknown>]; toggleRow: [id: unknown] }>()
+const emit = defineEmits<{
+  rowClick: [row: Record<string, unknown>]
+  toggleRow: [id: unknown]
+  retry: []
+}>()
 
 const tableColumns = computed<TableColumn<Record<string, unknown>>[]>(() => {
   const cols: TableColumn<Record<string, unknown>>[] = []
@@ -65,7 +69,14 @@ function badgeColor(value: unknown): 'success' | 'error' | 'neutral' {
 
 <template>
   <div class="space-y-3">
-    <UAlert v-if="error" color="error" variant="subtle" :title="error" icon="i-lucide-alert-circle" />
+    <UAlert
+      v-if="error"
+      color="error"
+      variant="subtle"
+      :title="error"
+      icon="i-lucide-alert-circle"
+      :actions="[{ label: 'إعادة المحاولة', color: 'neutral', variant: 'outline', onClick: () => emit('retry') }]"
+    />
 
     <template v-else>
       <p class="text-muted text-sm">

@@ -2,6 +2,7 @@ import { ref, watch } from 'vue'
 import { refDebounced } from '@vueuse/core'
 import { db } from '@/lib/supabase'
 import type { Database } from '@/types/db'
+import { toUserMessage } from '@/utils/errors'
 
 export type VolunteerRow = Database['public']['Views']['v_volunteers']['Row']
 export type StatusFilter = 'all' | 'pending' | 'approved' | 'rejected'
@@ -34,7 +35,7 @@ export function useVolunteersList() {
       // not-pending and keeps the query's alphabetical order within each.
       rows.value = list.sort((a, b) => Number(b.status === 'pending') - Number(a.status === 'pending'))
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حدث خطأ غير متوقع أثناء تحميل المتطوعين'
+      error.value = toUserMessage(e, 'حدث خطأ غير متوقع أثناء تحميل المتطوعين')
       rows.value = []
     } finally {
       loading.value = false

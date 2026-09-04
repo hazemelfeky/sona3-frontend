@@ -1,5 +1,6 @@
 import { ref, watch, type Ref } from 'vue'
 import { db } from '@/lib/supabase'
+import { toUserMessage } from '@/utils/errors'
 
 export interface TimesheetEntry {
   id: string | number
@@ -41,7 +42,7 @@ export function useTimesheetEntries(userId: Ref<string | null>) {
       if (err) throw err
       rows.value = (data ?? []) as TimesheetEntry[]
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء تحميل المهام'
+      error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل المهام')
       rows.value = []
     } finally {
       loading.value = false

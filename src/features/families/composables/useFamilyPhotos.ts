@@ -1,6 +1,7 @@
 import { ref, watch, type Ref } from 'vue'
 import { supabase, db } from '@/lib/supabase'
 import { compressImage } from '@/utils/compressImage'
+import { toUserMessage } from '@/utils/errors'
 
 // family-photos is a PRIVATE bucket — there is no public URL. Every image
 // shown in the UI goes through a signed URL minted at load time (same rule
@@ -72,7 +73,7 @@ export function useFamilyPhotos(familyId: Ref<number>) {
       const urlByPath = new Map((signed ?? []).map((s) => [s.path, s.signedUrl]))
       photos.value = rows.map((row) => ({ ...row, url: urlByPath.get(row.storage_path) ?? null }))
     } catch (e) {
-      error.value = e instanceof Error ? e.message : 'حصلت مشكلة أثناء تحميل الصور'
+      error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل الصور')
       photos.value = []
     } finally {
       loading.value = false
