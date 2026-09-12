@@ -9,7 +9,7 @@ const props = defineProps<{ familyId: number }>()
 const store = useStore()
 // The detail page already gates on families.view — defence in depth.
 const canView = computed(() => store.hasPerm('families.view'))
-const canRecord = computed(() => store.hasPerm('aid.manage'))
+const canRecord = computed(() => store.hasPerm('operations.manage'))
 
 const { visits, loading, error, refresh } = useFamilyAidHistory(() => props.familyId)
 

@@ -1,6 +1,8 @@
 <route lang="yaml">
 meta:
-  requiresPerm: stock.view
+  requiresPerm:
+    - operations.view
+    - operations.manage
 </route>
 
 <script setup lang="ts">
@@ -22,7 +24,7 @@ const toast = useToast()
 
 const { rows, imageUrls, loading, error, refresh } = useStockList()
 
-const canManage = () => store.hasPerm('stock.manage')
+const canManage = () => store.hasPerm('operations.manage')
 
 function openLot(row: StockBalanceRow) {
   router.push(`/stock/${row.lot_id}`)

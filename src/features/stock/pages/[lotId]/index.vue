@@ -1,6 +1,8 @@
 <route lang="yaml">
 meta:
-  requiresPerm: stock.view
+  requiresPerm:
+    - operations.view
+    - operations.manage
 </route>
 
 <script setup lang="ts">
@@ -27,11 +29,7 @@ const priceLabel = computed(() =>
 
 const hasStock = computed(() => (lot.value?.quantity_left ?? 0) > 0)
 
-// Distributing draws on both sides of the workflow, so either permission is
-// enough to reach it.
-const canDistribute = computed(
-  () => hasStock.value && (store.hasPerm('stock.manage') || store.hasPerm('aid.manage')),
-)
+const canDistribute = computed(() => hasStock.value && store.hasPerm('operations.manage'))
 
 function openFamily(row: StockDistributionRow) {
   router.push(`/families/${row.family_id}`)

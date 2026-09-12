@@ -295,7 +295,7 @@ export async function deleteAid(aidId: number) {
     }
   }
 
-  // Hiding the button without aid.manage is UX only — RLS is the real gate,
+  // Hiding the button without operations.manage is UX only — RLS is the real gate,
   // so a rejected delete still surfaces here.
   const { error } = await db.from('aid').delete().eq('aid_id', aidId)
   if (error) throw new Error(toUserMessage(error, 'حصلت مشكلة أثناء حذف التنفيذ. حاول تاني.'))

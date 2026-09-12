@@ -10,7 +10,7 @@ export function buildSheetBuilderConfig(
   return {
     title: 'بناء شيت',
     source: 'v_families_list',
-    requiresPerm: 'families.execute',
+    requiresPerm: 'families.sheets',
     // An unresearched draft has nothing to distribute against — it must not
     // reach a sheet.
     fixedFilter: { record_status: 'active' },

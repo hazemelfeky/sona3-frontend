@@ -1,8 +1,8 @@
 <route lang="yaml">
 meta:
   requiresPerm:
-    - families.view
-    - aid.manage
+    - operations.view
+    - operations.manage
 </route>
 
 <script setup lang="ts">
@@ -23,7 +23,7 @@ const isValidId = computed(() => Number.isInteger(aidId.value) && aidId.value > 
 
 const { aid, items, volunteers, photos, notFound, loading, error, reload } = useAidDetail(aidId)
 
-const canManage = computed(() => store.hasPerm('aid.manage'))
+const canManage = computed(() => store.hasPerm('operations.manage'))
 
 const money = (value: unknown) => `${formatNumber(value)} ج`
 

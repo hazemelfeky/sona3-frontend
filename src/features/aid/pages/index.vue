@@ -1,8 +1,8 @@
 <route lang="yaml">
 meta:
   requiresPerm:
-    - families.view
-    - aid.manage
+    - operations.view
+    - operations.manage
 </route>
 
 <script setup lang="ts">
@@ -24,7 +24,7 @@ const toast = useToast()
 const { rows, aidsByVolunteer, loading, error, refresh } = useAidList()
 const { options: volunteerOptions } = useVolunteerOptions()
 
-const canManage = () => store.hasPerm('aid.manage')
+const canManage = () => store.hasPerm('operations.manage')
 
 /* ---- filters ---- */
 

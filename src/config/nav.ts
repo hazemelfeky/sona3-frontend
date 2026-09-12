@@ -42,13 +42,13 @@ export const nav: NavEntry[] = [
     label: 'التنفيذات',
     icon: 'i-lucide-hand-heart',
     to: '/aid',
-    requiresPerm: ['families.view', 'aid.manage'],
+    requiresPerm: ['operations.view', 'operations.manage'],
   },
   {
     label: 'المخزون',
     icon: 'i-lucide-package',
     to: '/stock',
-    requiresPerm: 'stock.view',
+    requiresPerm: ['operations.view', 'operations.manage'],
   },
   {
     label: 'الشؤون المالية',

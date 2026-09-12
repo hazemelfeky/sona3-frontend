@@ -1,6 +1,6 @@
 <route lang="yaml">
 meta:
-  requiresPerm: aid.manage
+  requiresPerm: operations.manage
 </route>
 
 <script setup lang="ts">

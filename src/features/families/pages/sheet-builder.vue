@@ -1,6 +1,6 @@
 <route lang="yaml">
 meta:
-  requiresPerm: families.execute
+  requiresPerm: families.sheets
 </route>
 
 <script setup lang="ts">
@@ -99,7 +99,7 @@ function confirmReplace() {
   confirmReplaceOpen.value = false
 }
 
-// --- saved groups (shared — every families.execute holder sees all of them) ---
+// --- saved groups (shared — every families.sheets holder sees all of them) ---
 const saveGroupOpen = ref(false)
 const loadGroupOpen = ref(false)
 

@@ -61,7 +61,7 @@ const deleteModalOpen = ref(false)
 
 function familyRowActions(row: Record<string, unknown>): DropdownMenuItem[] {
   const items: DropdownMenuItem[] = []
-  if (store.hasPerm('aid.manage')) {
+  if (store.hasPerm('operations.manage')) {
     items.push({
       label: 'تنفيذ',
       icon: 'i-lucide-hand-heart',
@@ -111,7 +111,7 @@ function onFamilyDeleted() {
       <template #actions>
         <div class="flex items-center gap-2">
           <UButton
-            v-if="store.hasPerm('families.execute')"
+            v-if="store.hasPerm('families.sheets')"
             to="/families/sheet-builder"
             icon="i-lucide-file-stack"
             label="بناء شيت"

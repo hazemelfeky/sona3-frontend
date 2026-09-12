@@ -232,7 +232,7 @@ export async function deleteLot(lotId: number, imagePath: string | null) {
   if (imagePath) await supabase.storage.from(BUCKET).remove([imagePath])
 
   const { error } = await db.from('stock_lots').delete().eq('lot_id', lotId)
-  // Hiding the button without stock.manage is UX only — RLS is the real
+  // Hiding the button without operations.manage is UX only — RLS is the real
   // gate, so a rejected delete still surfaces here.
   if (error) throw new Error(toUserMessage(error, 'حصلت مشكلة أثناء مسح المنتج. حاول تاني.'))
 }

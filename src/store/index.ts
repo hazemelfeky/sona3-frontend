@@ -62,9 +62,9 @@ export const useStore = defineStore('app', () => {
   }
 
   // A route or nav entry may list several permission codes — holding any one
-  // of them is enough. /aid is the case that needs it: it's for the people
-  // who record executions (aid.manage) and the people who only read them
-  // (families.view) alike.
+  // of them is enough. /aid and /stock are the cases that need it: they're for
+  // the people who record executions (operations.manage) and the people who
+  // only read them (operations.view) alike.
   function hasAnyPerm(codes: string | string[] | undefined) {
     if (!codes) return true
     return (Array.isArray(codes) ? codes : [codes]).some((code) => permsSet.value.has(code))
