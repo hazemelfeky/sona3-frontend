@@ -136,9 +136,9 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
-    '//notifications/': RouteRecordInfo<
-      '//notifications/',
-      '/notifications',
+    '//notifications/send': RouteRecordInfo<
+      '//notifications/send',
+      '/notifications/send',
       Record<never, never>,
       Record<never, never>,
       | never
@@ -353,9 +353,9 @@ declare module 'vue-router/auto-routes' {
       pathParamNames:
         | never
     }
-    'src/features/notifications/pages/index.vue': {
+    'src/features/notifications/pages/send.vue': {
       routes:
-        | '//notifications/'
+        | '//notifications/send'
       views:
         | never
       pathParamNames:

@@ -65,7 +65,7 @@ export const nav: NavEntry[] = [
   {
     label: 'الإشعارات',
     icon: 'i-lucide-bell-ring',
-    to: '/notifications',
+    to: '/notifications/send',
     requiresPerm: 'notifications.send',
   },
 ]

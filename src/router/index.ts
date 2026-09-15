@@ -8,6 +8,7 @@ const router = createRouter({
   routes: [
     { path: '/', redirect: '/dashboard' },
     { path: '/auth', redirect: '/auth/login' },
+    { path: '/notifications', redirect: '/notifications/send' },
     ...setupLayouts(routes as RouteRecordRaw[]),
   ],
 })

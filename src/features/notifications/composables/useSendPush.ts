@@ -1,39 +1,34 @@
 import { ref } from 'vue'
-import { FunctionsHttpError } from '@supabase/supabase-js'
+import { FunctionsFetchError, FunctionsHttpError, FunctionsRelayError } from '@supabase/supabase-js'
 import { db, supabase } from '@/lib/supabase'
-import type { Database } from '@/types/db'
-import { toUserMessage } from '@/utils/errors'
+import { isOfflineError, OFFLINE_MESSAGE, toUserMessage } from '@/utils/errors'
 
 export interface SendPushSummary {
-  ok: boolean
-  target: 'user' | 'users' | 'all'
-  targeted_users: number
-  users_without_subscription: number
-  subscriptions: number
+  ok?: boolean
   sent: number
   failed: number
-  removed_expired: number
-  errors: { status: number | null; message: string }[]
+  subscriptions?: number
+  removed_expired?: number
+  users_without_subscription?: number
 }
 
 export interface SendPushPayload {
+  user_id: string
   title: string
   body: string
-  user_id?: string
-  user_ids?: string[]
-  all?: boolean
-  url?: string
 }
 
-type DirectoryRow = Database['public']['Views']['v_user_directory']['Row']
-export interface UserOption {
+export interface VolunteerOption {
   user_id: string
   label: string
-  username: string | null
+  email: string | null
+  username: string
 }
 
-export function useUserOptions() {
-  const options = ref<UserOption[]>([])
+// `email` here is the contact email the user typed at signup (optional).
+// Never select `auth_email` — that's the placeholder login address.
+export function useVolunteerOptions() {
+  const options = ref<VolunteerOption[]>([])
   const loading = ref(true)
   const error = ref<string | null>(null)
 
@@ -42,17 +37,20 @@ export function useUserOptions() {
     error.value = null
     try {
       const { data, error: err } = await db
-        .from('v_user_directory')
-        .select('user_id, full_name, username')
+        .from('profiles')
+        .select('user_id, full_name, username, email')
+        .eq('status', 'approved')
         .order('full_name')
       if (err) throw err
-      options.value = ((data ?? []) as DirectoryRow[]).map((r) => ({
+      const rows = (data ?? []) as { user_id: string; full_name: string | null; username: string; email: string | null }[]
+      options.value = rows.map((r) => ({
         user_id: r.user_id,
-        label: r.full_name || r.username || '—',
+        label: r.full_name || r.username,
+        email: r.email,
         username: r.username,
       }))
     } catch (e) {
-      error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل المستخدمين')
+      error.value = toUserMessage(e, 'حصلت مشكلة أثناء تحميل المتطوعين')
       options.value = []
     } finally {
       loading.value = false
@@ -63,27 +61,33 @@ export function useUserOptions() {
   return { options, loading, error, refresh: load }
 }
 
-const ERROR_MESSAGES: Record<string, string> = {
+const FUNCTION_MISSING_MESSAGE = 'خدمة الإرسال (send-push) لسه مش متاحة على السيرفر. جرّب تاني بعد ما تتفعّل.'
+
+const ERROR_CODES: Record<string, string> = {
   UNAUTHENTICATED: 'انتهت الجلسة، سجّل دخول تاني',
-  NO_PERMISSION: 'مش معاك صلاحية إرسال الإشعارات',
-  INVALID_TITLE: 'العنوان مطلوب (بحد أقصى 120 حرف)',
-  INVALID_BODY: 'نص الرسالة مطلوب (بحد أقصى 1000 حرف)',
-  TARGET_REQUIRED: 'اختار مستخدم',
-  INVALID_USER_ID: 'المستخدم المختار غير صالح',
-  SERVER_MISCONFIGURED: 'إعدادات الإشعارات على السيرفر ناقصة (VAPID secrets)',
+  NO_PERMISSION: 'مش معاك صلاحية للإجراء ده',
 }
 
-async function readFunctionError(error: unknown): Promise<string> {
+async function translateInvokeError(error: unknown): Promise<string> {
   if (error instanceof FunctionsHttpError) {
+    const res = error.context as Response
+    if (res.status === 404) return FUNCTION_MISSING_MESSAGE
+    if (res.status === 401) return ERROR_CODES.UNAUTHENTICATED!
+    if (res.status === 403) return ERROR_CODES.NO_PERMISSION!
     try {
-      const payload = (await error.context.json()) as { error?: string; message?: string }
-      if (payload.error && ERROR_MESSAGES[payload.error]) return ERROR_MESSAGES[payload.error]!
-      return payload.message || payload.error || 'فشل الإرسال'
+      const payload = (await res.json()) as { error?: string; message?: string }
+      return (payload.error && ERROR_CODES[payload.error]) || payload.message || 'فشل الإرسال. حاول تاني.'
     } catch {
-      return 'فشل الإرسال'
+      return 'فشل الإرسال. حاول تاني.'
     }
   }
-  return toUserMessage(error, 'فشل الإرسال')
+  // A function that doesn't exist yet answers the browser's CORS preflight
+  // with a bare 404, which surfaces as a fetch failure rather than an HTTP
+  // error — so when we're actually online, treat it as "not deployed".
+  if (error instanceof FunctionsFetchError || error instanceof FunctionsRelayError) {
+    return isOfflineError(error) || navigator.onLine === false ? OFFLINE_MESSAGE : FUNCTION_MISSING_MESSAGE
+  }
+  return toUserMessage(error, 'فشل الإرسال. حاول تاني.')
 }
 
 export function useSendPush() {
@@ -100,9 +104,13 @@ export function useSendPush() {
         body: payload,
       })
       if (err) throw err
-      summary.value = data
+      summary.value = {
+        ...data,
+        sent: Number(data?.sent ?? 0),
+        failed: Number(data?.failed ?? 0),
+      }
     } catch (e) {
-      error.value = await readFunctionError(e)
+      error.value = await translateInvokeError(e)
     } finally {
       sending.value = false
     }

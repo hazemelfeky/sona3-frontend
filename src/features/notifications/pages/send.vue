@@ -5,30 +5,27 @@ meta:
 
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useSendPush, useUserOptions } from '@/features/notifications/composables/useSendPush'
-import PushToggle from '@/components/PushToggle.vue'
+import { useSendPush, useVolunteerOptions } from '@/features/notifications/composables/useSendPush'
 
-const { options, loading: usersLoading, error: usersError } = useUserOptions()
+const { options, loading: optionsLoading, error: optionsError } = useVolunteerOptions()
 const { sending, summary, error, send } = useSendPush()
+
+const TITLE_MAX = 120
+const BODY_MAX = 1000
 
 const userId = ref<string | undefined>(undefined)
 const title = ref('')
 const body = ref('')
 
-const TITLE_MAX = 120
-const BODY_MAX = 1000
+const selected = computed(() => options.value.find((o) => o.user_id === userId.value) ?? null)
 
 const canSend = computed(
   () =>
     !!userId.value &&
     title.value.trim().length > 0 &&
-    title.value.length <= TITLE_MAX &&
     body.value.trim().length > 0 &&
-    body.value.length <= BODY_MAX &&
     !sending.value,
 )
-
-const selectedLabel = computed(() => options.value.find((o) => o.user_id === userId.value)?.label ?? '')
 
 async function onSubmit() {
   if (!canSend.value || !userId.value) return
@@ -37,18 +34,18 @@ async function onSubmit() {
 
 const resultColor = computed(() => {
   const s = summary.value
-  if (!s) return 'neutral'
-  if (s.sent > 0 && s.failed === 0) return 'success'
-  if (s.sent > 0) return 'warning'
-  return 'error'
+  if (!s) return 'neutral' as const
+  if (s.sent > 0 && s.failed === 0) return 'success' as const
+  if (s.sent > 0) return 'warning' as const
+  return 'error' as const
 })
 
 const resultTitle = computed(() => {
   const s = summary.value
   if (!s) return ''
-  if (s.subscriptions === 0) return `${selectedLabel.value || 'المستخدم'} مش مفعّل الإشعارات على أي جهاز`
-  if (s.sent > 0 && s.failed === 0) return 'تم إرسال الإشعار بنجاح'
-  if (s.sent > 0) return 'تم الإرسال لبعض الأجهزة وفشل للبعض'
+  if (s.sent === 0 && s.failed === 0) return 'المتطوع مش مفعّل الإشعارات على أي جهاز'
+  if (s.failed === 0) return 'تم إرسال الإشعار بنجاح'
+  if (s.sent > 0) return 'اتبعت لبعض الأجهزة وفشل للبعض'
   return 'فشل إرسال الإشعار'
 })
 </script>
@@ -56,35 +53,40 @@ const resultTitle = computed(() => {
 <template>
   <div dir="rtl" class="max-w-2xl mx-auto space-y-4">
     <div class="flex items-center gap-3">
-      <div class="flex size-10 items-center justify-center rounded-xl bg-[#12385D] text-white">
-        <UIcon name="i-lucide-bell-ring" class="size-5" />
+      <div class="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#12385D] text-white">
+        <UIcon name="i-lucide-send" class="size-5" />
       </div>
       <div>
         <h1 class="text-2xl font-semibold">إرسال إشعار</h1>
-        <p class="text-sm text-dimmed">ابعت إشعار فوري لمستخدم معيّن على كل أجهزته المفعّلة.</p>
+        <p class="text-sm text-dimmed">ابعت إشعار فوري لمتطوع معيّن.</p>
       </div>
     </div>
 
     <UCard>
       <form class="space-y-4 p-4 sm:p-6" @submit.prevent="onSubmit">
-        <UFormField label="المستخدم" required>
-          <UAlert v-if="usersError" color="error" variant="subtle" :title="usersError" icon="i-lucide-alert-circle" />
+        <UFormField label="المتطوع" required>
+          <UAlert v-if="optionsError" color="error" variant="subtle" :title="optionsError" icon="i-lucide-alert-circle" />
           <USelectMenu
             v-else
             v-model="userId"
-            searchable
             :items="options"
-            :loading="usersLoading"
+            :loading="optionsLoading"
+            :filter-fields="['label', 'email', 'username']"
             value-key="user_id"
             label-key="label"
-            placeholder="ابحث واختار مستخدم"
+            placeholder="ابحث بالاسم أو الإيميل"
             class="w-full"
           >
             <template #item-label="{ item }">
-              <span>{{ item.label }}</span>
-              <span v-if="item.username" class="text-dimmed text-xs ms-2">@{{ item.username }}</span>
+              <div class="flex min-w-0 flex-col text-start">
+                <span class="truncate">{{ item.label }}</span>
+                <span class="truncate text-xs text-dimmed" dir="ltr">{{ item.email || `@${item.username}` }}</span>
+              </div>
             </template>
           </USelectMenu>
+          <p v-if="selected" class="mt-1 text-xs text-dimmed" dir="ltr">
+            {{ selected.email || `@${selected.username}` }}
+          </p>
         </UFormField>
 
         <UFormField label="العنوان" required :hint="`${title.length}/${TITLE_MAX}`">
@@ -103,14 +105,27 @@ const resultTitle = computed(() => {
         </UFormField>
 
         <div class="flex justify-end">
-          <UButton type="submit" icon="i-lucide-send" color="primary" :loading="sending" :disabled="!canSend">
+          <UButton
+            type="submit"
+            icon="i-lucide-send"
+            class="bg-[#12385D] text-white"
+            :loading="sending"
+            :disabled="!canSend"
+          >
             إرسال
           </UButton>
         </div>
       </form>
     </UCard>
 
-    <UAlert v-if="error" color="error" variant="subtle" icon="i-lucide-alert-circle" title="فشل الإرسال" :description="error" />
+    <UAlert
+      v-if="error"
+      color="error"
+      variant="subtle"
+      icon="i-lucide-alert-circle"
+      title="فشل الإرسال"
+      :description="error"
+    />
 
     <UAlert
       v-else-if="summary"
@@ -121,18 +136,10 @@ const resultTitle = computed(() => {
     >
       <template #description>
         <ul class="mt-1 space-y-0.5 text-sm">
-          <li>عدد الأجهزة المسجّلة: {{ summary.subscriptions }}</li>
-          <li>اتبعت بنجاح: {{ summary.sent }}</li>
+          <li>نجح: {{ summary.sent }}</li>
           <li>فشل: {{ summary.failed }}</li>
-          <li v-if="summary.removed_expired">اشتراكات منتهية واتمسحت: {{ summary.removed_expired }}</li>
         </ul>
       </template>
     </UAlert>
-
-    <UCard>
-      <div class="p-4 sm:p-6">
-        <PushToggle />
-      </div>
-    </UCard>
   </div>
 </template>
