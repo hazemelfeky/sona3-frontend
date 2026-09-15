@@ -16,6 +16,7 @@ declare module 'vue' {
     DataGrid: typeof import('./src/components/list-page/DataGrid.vue')['default']
     DeleteFamilyModal: typeof import('./src/components/DeleteFamilyModal.vue')['default']
     FilterBar: typeof import('./src/components/list-page/FilterBar.vue')['default']
+    InstallBanner: typeof import('./src/components/InstallBanner.vue')['default']
     PwaUpdateToast: typeof import('./src/components/PwaUpdateToast.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']

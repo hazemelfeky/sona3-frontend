@@ -29,6 +29,10 @@ export default defineConfig({
     vue(),
     vueDevTools(),
     VitePWA({
+      // Custom SW (src/sw.js) so we can add push / notificationclick listeners.
+      strategies: 'injectManifest',
+      srcDir: 'src',
+      filename: 'sw.js',
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'logo.svg'],
       manifest: {
@@ -42,26 +46,20 @@ export default defineConfig({
         display: 'standalone',
         start_url: '/',
         icons: [
-          { src: 'pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
-          { src: 'pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
-          { src: 'pwa-maskable-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
-          { src: 'apple-touch-icon.png', sizes: '180x180', type: 'image/png', purpose: 'any' },
+          { src: '/pwa-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any' },
+          { src: '/pwa-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'any' },
+          // Maskable: logo ~80% wide on a solid #12385D background, fills the Android circle.
+          { src: '/pwa-maskable-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'maskable' },
+          { src: '/pwa-maskable-512x512.png', sizes: '512x512', type: 'image/png', purpose: 'maskable' },
+          { src: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png', purpose: 'any' },
         ],
       },
-      workbox: {
+      injectManifest: {
         // App shell only. Nothing here is data — every row the app shows
-        // still comes off the network.
+        // still comes off the network. Supabase (data + auth) is never routed
+        // by src/sw.js, so it always hits the network; navigation fallback
+        // and its /api + supabase denylist live in src/sw.js too.
         globPatterns: ['**/*.{js,css,html,woff2,png,svg,ico}'],
-        navigateFallbackDenylist: [/^\/api/, /supabase/],
-        runtimeCaching: [
-          {
-            // Supabase covers both PostgREST data and the auth endpoints;
-            // a cached response on either would be actively wrong, so the
-            // service worker stays out of the way entirely.
-            urlPattern: ({ url }) => url.hostname.includes('supabase'),
-            handler: 'NetworkOnly',
-          },
-        ],
       },
     }),
   ],
