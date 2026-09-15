@@ -170,6 +170,16 @@ export const useStore = defineStore('app', () => {
   }
 
   async function signOut() {
+    // Drop this device's push subscription while the session (and RLS
+    // identity) still exists, so a shared device stops receiving the
+    // previous user's notifications. Best-effort: never blocks logout.
+    // Dynamic import avoids a store <-> useNotifications import cycle.
+    try {
+      const { unsubscribeFromPush } = await import('@/composables/useNotifications')
+      await unsubscribeFromPush()
+    } catch {
+      // ignore
+    }
     await supabase.auth.signOut()
     userId.value = null
     profile.value = null

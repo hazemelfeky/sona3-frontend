@@ -62,4 +62,10 @@ export const nav: NavEntry[] = [
     to: '/permissions',
     requiresPerm: 'users.permissions',
   },
+  {
+    label: 'الإشعارات',
+    icon: 'i-lucide-bell-ring',
+    to: '/notifications',
+    requiresPerm: 'notifications.send',
+  },
 ]

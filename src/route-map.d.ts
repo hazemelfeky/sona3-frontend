@@ -136,6 +136,13 @@ declare module 'vue-router/auto-routes' {
       Record<never, never>,
       | never
     >,
+    '//notifications/': RouteRecordInfo<
+      '//notifications/',
+      '/notifications',
+      Record<never, never>,
+      Record<never, never>,
+      | never
+    >,
     '//permissions/': RouteRecordInfo<
       '//permissions/',
       '/permissions',
@@ -341,6 +348,14 @@ declare module 'vue-router/auto-routes' {
     'src/features/families/pages/sheet-builder.vue': {
       routes:
         | '//families/sheet-builder'
+      views:
+        | never
+      pathParamNames:
+        | never
+    }
+    'src/features/notifications/pages/index.vue': {
+      routes:
+        | '//notifications/'
       views:
         | never
       pathParamNames:

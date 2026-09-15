@@ -12,6 +12,7 @@ import {
 import { usePermissionsCatalog } from '@/features/permissions/composables/usePermissionsCatalog'
 import { USERNAME_PATTERN } from '@/features/auth/composables/useUsernameAvailability'
 import ActivityGrid from '@/features/timesheet/components/ActivityGrid.vue'
+import PushToggle from '@/components/PushToggle.vue'
 
 const route = useRoute()
 const store = useStore()
@@ -206,6 +207,11 @@ async function onAvatarChange(e: Event) {
             </UBadge>
           </div>
           <p v-else class="text-sm text-dimmed">مفيش صلاحيات على حسابك دلوقتي.</p>
+        </template>
+
+        <template v-if="isSelf">
+          <USeparator class="my-4" />
+          <PushToggle />
         </template>
       </UCard>
 
